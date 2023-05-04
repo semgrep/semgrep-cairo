@@ -1,0 +1,30 @@
+File: semgrep-grammars/src/tree-sitter-cairo/LICENSE
+Git repo name: tree-sitter-cairo
+Latest commit in repo: b01f54b76af7e6f476c05e2bafd508b45b0e5257
+Last change in file:
+  commit 3c0af3d4afa69d528cc708daccd87da54eaed289
+  Author: Romain Jufer <romain.jufer@kudelskisecurity.com>
+  Date:   Thu May 4 08:40:42 2023 +0200
+  
+      update author
+---
+File: semgrep-grammars/src/tree-sitter-cairo/grammar.js
+Git repo name: tree-sitter-cairo
+Latest commit in repo: b01f54b76af7e6f476c05e2bafd508b45b0e5257
+Last change in file:
+  commit 5704f77441c4df9eabcc3a5e96a1e7655390cbdb
+  Author: Romain Jufer <romain.jufer@kudelskisecurity.com>
+  Date:   Thu May 4 08:16:36 2023 +0200
+  
+      cleanup + add metadata
+---
+File: semgrep-grammars/src/semgrep-cairo/grammar.js
+Git repo name: ocaml-tree-sitter-semgrep
+Latest commit in repo: fd27f76c256261e62298b182f325dcdfd77870c9
+Last change in file:
+  commit dc07cc6e927f8d113b0e1e77f40f46c570f984d3
+  Author: Romain Jufer <romain.jufer@gmail.com>
+  Date:   Thu May 4 09:01:05 2023 +0200
+  
+      grammar extension + tree-sitter submodule
+---
