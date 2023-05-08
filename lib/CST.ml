@@ -10,34 +10,33 @@ open Tree_sitter_run
 
 type number_suffix = Token.t (* pattern _[a-z][a-z0-9]+ *)
 
-type unit_type = Token.t
+type unit_ = Token.t
 
 type binary = Token.t (* pattern 0b[01]+ *)
 
 type integer = Token.t (* pattern [0-9]+ *)
 
-type name = Token.t (* pattern [a-zA-Z][a-zA-Z0-9_]* *)
-
-type semgrep_var = Token.t (* pattern \$[A-Z_][A-Z_0-9]* *)
-
 type octal = Token.t (* pattern 0o[0-7]+ *)
 
 type hex = Token.t (* pattern 0x[0-9a-f]+ *)
 
+type unit_type = Token.t
+
+type semgrep_var = Token.t (* pattern \$[A-Z_][A-Z_0-9]* *)
+
 type string_ = Token.t
 
-type path = (
-    name (*tok*)
-  * (Token.t (* "::" *) * name (*tok*)) list (* zero or more *)
-  * Token.t (* "::" *) option
-)
+type pat_7fdeb71 = Token.t (* pattern [a-zA-Z][a-zA-Z0-9_]* *)
 
 type modifier = [
     `Modi_ref of Token.t (* "ref" *)
   | `Modi_mut of Token.t (* "mut" *)
 ]
 
-type pattern_var = [ `Wild of Token.t (* "_" *) | `Name of name (*tok*) ]
+type name = [
+    `Pat_7fdeb71 of pat_7fdeb71
+  | `Semg_var of semgrep_var (*tok*)
+]
 
 type literal_expression = [
     `True of Token.t (* "true" *)
@@ -52,24 +51,38 @@ type literal_expression = [
       * number_suffix (*tok*) option
     )
   | `Str of string_ (*tok*)
-  | `Unit of (Token.t (* "(" *) * Token.t (* ")" *))
+  | `Unit of unit_ (*tok*)
+]
+
+type path = (
+    name
+  * (Token.t (* "::" *) * name) list (* zero or more *)
+  * Token.t (* "::" *) option
+)
+
+type pattern_var = [
+    `Wild of Token.t (* "_" *)
+  | `Choice_pat_7fdeb71 of name
 ]
 
 type type_argument_list = (
     Token.t (* "<" *)
-  * literal_expression list (* zero or more *)
+  * literal_expression
+  * (Token.t (* "," *) * literal_expression) list (* zero or more *)
+  * Token.t (* "," *) option
   * Token.t (* ">" *)
 )
 
 type attribute_argument = [
     `Choice_true of literal_expression
-  | `Name of name (*tok*)
+  | `Choice_pat_7fdeb71 of name
   | `Path_COLON_choice_true of (
         path * Token.t (* ":" *) * literal_expression
     )
   | `Path_COLON_attr_arg_list of (
         path * Token.t (* ":" *) * attribute_argument_list
     )
+  | `Ellips of Token.t (* "..." *)
 ]
 
 and attribute_argument_list = (
@@ -80,13 +93,13 @@ and attribute_argument_list = (
   * Token.t (* ")" *)
 )
 
-type qualified_name_segment = (name (*tok*) * type_argument_list option)
+type qualified_name_segment = (name * type_argument_list option)
 
 type attribute = (path * attribute_argument_list option)
 
 type qualified_name = (
     (qualified_name_segment * Token.t (* "::" *)) list (* zero or more *)
-  * name (*tok*)
+  * name
   * (Token.t (* "::" *) * type_argument_list) option
 )
 
@@ -125,9 +138,9 @@ type pattern = [
 ]
 
 and pattern_struct_binding = [
-    `Name of name (*tok*)
-  | `Name_COLON_choice_choice_wild of (
-        name (*tok*) * Token.t (* ":" *) * pattern
+    `Choice_pat_7fdeb71 of name
+  | `Choice_pat_7fdeb71_COLON_choice_choice_wild of (
+        name * Token.t (* ":" *) * pattern
     )
 ]
 
@@ -155,21 +168,24 @@ type match_case_pattern = [
 ]
 
 type member_declaration = [
-    `Rep_attr_list_name_COLON_choice_type_tuple of (
+    `Rep_attr_list_choice_pat_7fdeb71_COLON_choice_type_tuple of (
         attribute_list list (* zero or more *)
-      * name (*tok*)
+      * name
       * Token.t (* ":" *)
       * type_
     )
   | `Ellips of Token.t (* "..." *)
 ]
 
-type parameter_declaration = (
-    modifier list (* zero or more *)
-  * name (*tok*)
-  * Token.t (* ":" *)
-  * type_
-)
+type parameter_declaration = [
+    `Rep_choice_modi_ref_choice_pat_7fdeb71_COLON_choice_type_tuple of (
+        modifier list (* zero or more *)
+      * name
+      * Token.t (* ":" *)
+      * type_
+    )
+  | `Ellips of Token.t (* "..." *)
+]
 
 type argument_list = (
     Token.t (* "(" *)
@@ -220,7 +236,11 @@ and block = (
   * Token.t (* "}" *)
 )
 
-and call_expression = ([ `Choice_tuple_exp of expression ] * argument_list)
+and call_expression = (expression * argument_list)
+
+and deep_ellipsis = (
+    Token.t (* "<..." *) * expression * Token.t (* "...>" *)
+)
 
 and expression = [
     `Tuple_exp of tuple_expression
@@ -234,11 +254,8 @@ and expression = [
   | `Call_exp of call_expression
   | `Qual_name of qualified_name
   | `Choice_true of literal_expression
-  | `Semg_var of semgrep_var (*tok*)
   | `Ellips of Token.t (* "..." *)
-  | `Deep_ellips of (
-        Token.t (* "<..." *) * expression * Token.t (* "...>" *)
-    )
+  | `Deep_ellips of deep_ellipsis
 ]
 
 and if_expression = (
@@ -249,9 +266,7 @@ and if_expression = (
       option
 )
 
-and loop_expression = (
-    Token.t (* "loop" *) * Token.t (* "{" *) * expression * Token.t (* "}" *)
-)
+and loop_expression = (Token.t (* "loop" *) * block)
 
 and match_case = (match_case_pattern * Token.t (* "=>" *) * expression)
 
@@ -264,7 +279,14 @@ and match_cases = (
 
 and match_expression = (Token.t (* "match" *) * expression * match_cases)
 
-and selector_expression = (expression * Token.t (* "." *) * name (*tok*))
+and selector_expression = [
+    `Choice_tuple_exp_DOT_choice_pat_7fdeb71 of (
+        expression * Token.t (* "." *) * name
+    )
+  | `Choice_tuple_exp_DOT_ellips of (
+        expression * Token.t (* "." *) * Token.t (* "..." *)
+    )
+]
 
 and simple_expression = [
     `Tuple_exp of tuple_expression
@@ -277,6 +299,8 @@ and simple_expression = [
   | `Call_exp of call_expression
   | `Qual_name of qualified_name
   | `Choice_true of literal_expression
+  | `Ellips of Token.t (* "..." *)
+  | `Deep_ellips of deep_ellipsis
 ]
 
 and statement = [
@@ -290,7 +314,7 @@ and statement = [
       * Token.t (* ";" *)
     )
   | `Assign_stmt of (
-        [ `Name of name (*tok*) | `Wild of Token.t (* "_" *) ]
+        [ `Choice_pat_7fdeb71 of name | `Wild of Token.t (* "_" *) ]
       * [
             `STAREQ of Token.t (* "*=" *)
           | `SLASHEQ of Token.t (* "/=" *)
@@ -316,6 +340,8 @@ and statement = [
   | `Loop_exp of loop_expression
   | `Match_exp of match_expression
   | `Choice_tuple_exp_SEMI of (expression * Token.t (* ";" *))
+  | `Ellips of Token.t (* "..." *)
+  | `Deep_ellips of deep_ellipsis
 ]
 
 and tuple_expression = (
@@ -350,12 +376,12 @@ type parameter_list = (
 )
 
 type type_parameter_declaration = [
-    `Name of name (*tok*)
+    `Choice_pat_7fdeb71 of name
   | `Type_const_decl of (
-        Token.t (* "const" *) * name (*tok*) * Token.t (* ":" *) * type_
+        Token.t (* "const" *) * name * Token.t (* ":" *) * type_
     )
   | `Type_impl_decl of (
-        Token.t (* "impl" *) * name (*tok*) * Token.t (* ":" *) * type_
+        Token.t (* "impl" *) * name * Token.t (* ":" *) * type_
     )
 ]
 
@@ -370,7 +396,7 @@ type type_parameter_list = (
 type function_signature = (
     attribute_list list (* zero or more *)
   * Token.t (* "fn" *)
-  * name (*tok*)
+  * name
   * type_parameter_list option
   * parameter_list
   * (Token.t (* "->" *) * type_) option
@@ -378,7 +404,7 @@ type function_signature = (
 
 type trait_function = (
     function_signature
-  * [ `Opt_blk of block option | `SEMI of Token.t (* ";" *) ]
+  * [ `Blk of block | `SEMI of Token.t (* ";" *) ]
 )
 
 type trait_body = (
@@ -391,18 +417,18 @@ type declaration = [
     `Import_decl of (
         Token.t (* "use" *)
       * path
-      * (Token.t (* "as" *) * name (*tok*)) option
+      * (Token.t (* "as" *) * name) option
       * Token.t (* ";" *)
     )
   | `Module_decl of (
         attribute_list list (* zero or more *)
       * Token.t (* "mod" *)
-      * name (*tok*)
+      * name
       * [ `SEMI of Token.t (* ";" *) | `Module_body of module_body ]
     )
   | `Typeas_decl of (
         Token.t (* "type" *)
-      * name (*tok*)
+      * name
       * type_parameter_list option
       * Token.t (* "=" *)
       * type_
@@ -411,7 +437,7 @@ type declaration = [
   | `Const_decl of (
         attribute_list list (* zero or more *)
       * Token.t (* "const" *)
-      * name (*tok*)
+      * name
       * Token.t (* ":" *)
       * type_
       * Token.t (* "=" *)
@@ -419,15 +445,16 @@ type declaration = [
       * Token.t (* ";" *)
     )
   | `Trait_decl of (
-        Token.t (* "trait" *)
-      * name (*tok*)
+        attribute_list list (* zero or more *)
+      * Token.t (* "trait" *)
+      * name
       * type_parameter_list option
       * trait_body
     )
   | `Struct_decl of (
         attribute_list list (* zero or more *)
       * Token.t (* "struct" *)
-      * name (*tok*)
+      * name
       * type_parameter_list option
       * [
             `Member_decl_list of member_declaration_list
@@ -437,7 +464,7 @@ type declaration = [
   | `Enum_decl of (
         attribute_list list (* zero or more *)
       * Token.t (* "enum" *)
-      * name (*tok*)
+      * name
       * type_parameter_list option
       * member_declaration_list
     )
@@ -456,14 +483,14 @@ and impl_declaration = [
     `Impl_base of (
         attribute_list list (* zero or more *)
       * Token.t (* "impl" *)
-      * name (*tok*)
+      * name
       * type_parameter_list option
       * impl_body
     )
   | `Impl_trait of (
         attribute_list list (* zero or more *)
       * Token.t (* "impl" *)
-      * name (*tok*)
+      * name
       * type_parameter_list option
       * Token.t (* "of" *)
       * qualified_name
@@ -488,19 +515,17 @@ type source_file = [
 
 type ellipsis (* inlined *) = Token.t (* "..." *)
 
-type modifier_mut (* inlined *) = Token.t (* "mut" *)
+type wildcard (* inlined *) = Token.t (* "_" *)
 
-type unit_ (* inlined *) = (Token.t (* "(" *) * Token.t (* ")" *))
+type modifier_mut (* inlined *) = Token.t (* "mut" *)
 
 type modifier_ref (* inlined *) = Token.t (* "ref" *)
 
-type wildcard (* inlined *) = Token.t (* "_" *)
+type true_ (* inlined *) = Token.t (* "true" *)
 
 type comment (* inlined *) = Token.t
 
 type false_ (* inlined *) = Token.t (* "false" *)
-
-type true_ (* inlined *) = Token.t (* "true" *)
 
 type number (* inlined *) = (
     [
@@ -515,7 +540,7 @@ type number (* inlined *) = (
 type import_declaration (* inlined *) = (
     Token.t (* "use" *)
   * path
-  * (Token.t (* "as" *) * name (*tok*)) option
+  * (Token.t (* "as" *) * name) option
   * Token.t (* ";" *)
 )
 
@@ -558,15 +583,15 @@ type type_tuple (* inlined *) = (
 )
 
 type type_impl_declaration (* inlined *) = (
-    Token.t (* "impl" *) * name (*tok*) * Token.t (* ":" *) * type_
+    Token.t (* "impl" *) * name * Token.t (* ":" *) * type_
 )
 
 type type_const_declaration (* inlined *) = (
-    Token.t (* "const" *) * name (*tok*) * Token.t (* ":" *) * type_
+    Token.t (* "const" *) * name * Token.t (* ":" *) * type_
 )
 
 type assignment_statement (* inlined *) = (
-    [ `Name of name (*tok*) | `Wild of Token.t (* "_" *) ]
+    [ `Choice_pat_7fdeb71 of name | `Wild of Token.t (* "_" *) ]
   * [
         `STAREQ of Token.t (* "*=" *)
       | `SLASHEQ of Token.t (* "/=" *)
@@ -585,10 +610,6 @@ type break_statement (* inlined *) = (
   * Token.t (* ";" *)
 )
 
-type deep_ellipsis (* inlined *) = (
-    Token.t (* "<..." *) * expression * Token.t (* "...>" *)
-)
-
 type let_statement (* inlined *) = (
     Token.t (* "let" *)
   * Token.t (* "mut" *) option
@@ -605,10 +626,15 @@ type return_statement (* inlined *) = (
   * Token.t (* ";" *)
 )
 
+type semgrep_statement (* inlined *) = (
+    Token.t (* "__SEMGREP_STATEMENT" *)
+  * statement list (* one or more *)
+)
+
 type const_declaration (* inlined *) = (
     attribute_list list (* zero or more *)
   * Token.t (* "const" *)
-  * name (*tok*)
+  * name
   * Token.t (* ":" *)
   * type_
   * Token.t (* "=" *)
@@ -620,32 +646,27 @@ type semgrep_expression (* inlined *) = (
     Token.t (* "__SEMGREP_EXPRESSION" *) * expression
 )
 
-type semgrep_statement (* inlined *) = (
-    Token.t (* "__SEMGREP_STATEMENT" *)
-  * statement list (* one or more *)
+type enum_declaration (* inlined *) = (
+    attribute_list list (* zero or more *)
+  * Token.t (* "enum" *)
+  * name
+  * type_parameter_list option
+  * member_declaration_list
 )
 
 type typealias_declaration (* inlined *) = (
     Token.t (* "type" *)
-  * name (*tok*)
+  * name
   * type_parameter_list option
   * Token.t (* "=" *)
   * type_
   * Token.t (* ";" *)
 )
 
-type enum_declaration (* inlined *) = (
-    attribute_list list (* zero or more *)
-  * Token.t (* "enum" *)
-  * name (*tok*)
-  * type_parameter_list option
-  * member_declaration_list
-)
-
 type struct_declaration (* inlined *) = (
     attribute_list list (* zero or more *)
   * Token.t (* "struct" *)
-  * name (*tok*)
+  * name
   * type_parameter_list option
   * [
         `Member_decl_list of member_declaration_list
@@ -656,8 +677,9 @@ type struct_declaration (* inlined *) = (
 type function_declaration (* inlined *) = (function_signature * block)
 
 type trait_declaration (* inlined *) = (
-    Token.t (* "trait" *)
-  * name (*tok*)
+    attribute_list list (* zero or more *)
+  * Token.t (* "trait" *)
+  * name
   * type_parameter_list option
   * trait_body
 )
@@ -665,7 +687,7 @@ type trait_declaration (* inlined *) = (
 type impl_base (* inlined *) = (
     attribute_list list (* zero or more *)
   * Token.t (* "impl" *)
-  * name (*tok*)
+  * name
   * type_parameter_list option
   * impl_body
 )
@@ -673,7 +695,7 @@ type impl_base (* inlined *) = (
 type impl_trait (* inlined *) = (
     attribute_list list (* zero or more *)
   * Token.t (* "impl" *)
-  * name (*tok*)
+  * name
   * type_parameter_list option
   * Token.t (* "of" *)
   * qualified_name
@@ -683,6 +705,6 @@ type impl_trait (* inlined *) = (
 type module_declaration (* inlined *) = (
     attribute_list list (* zero or more *)
   * Token.t (* "mod" *)
-  * name (*tok*)
+  * name
   * [ `SEMI of Token.t (* ";" *) | `Module_body of module_body ]
 )

@@ -34,35 +34,35 @@ let extras = [
 
 let children_regexps : (string * Run.exp option) list = [
   "integer", None;
-  "true", None;
   "modifier_ref", None;
   "binary", None;
+  "wildcard", None;
   "hex", None;
   "ellipsis", None;
-  "string", None;
   "modifier_mut", None;
-  "name", None;
   "false", None;
+  "true", None;
+  "pat_7fdeb71", None;
+  "unit", None;
   "unit_type", None;
-  "unit",
-  Some (
-    Seq [
-      Token (Literal "(");
-      Token (Literal ")");
-    ];
-  );
-  "wildcard", None;
   "number_suffix", None;
   "semgrep_var", None;
+  "string", None;
   "octal", None;
   "path",
   Some (
     Seq [
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Repeat (
         Seq [
           Token (Literal "::");
-          Token (Name "name");
+          Alt [|
+            Token (Name "pat_7fdeb71");
+            Token (Name "semgrep_var");
+          |];
         ];
       );
       Opt (
@@ -92,7 +92,10 @@ let children_regexps : (string * Run.exp option) list = [
       Opt (
         Seq [
           Token (Literal "as");
-          Token (Name "name");
+          Alt [|
+            Token (Name "pat_7fdeb71");
+            Token (Name "semgrep_var");
+          |];
         ];
       );
       Token (Literal ";");
@@ -102,14 +105,27 @@ let children_regexps : (string * Run.exp option) list = [
   Some (
     Seq [
       Token (Literal "<");
+      Alt [|
+        Token (Name "true");
+        Token (Name "false");
+        Token (Name "number");
+        Token (Name "string");
+        Token (Name "unit");
+      |];
       Repeat (
-        Alt [|
-          Token (Name "true");
-          Token (Name "false");
-          Token (Name "number");
-          Token (Name "string");
-          Token (Name "unit");
-        |];
+        Seq [
+          Token (Literal ",");
+          Alt [|
+            Token (Name "true");
+            Token (Name "false");
+            Token (Name "number");
+            Token (Name "string");
+            Token (Name "unit");
+          |];
+        ];
+      );
+      Opt (
+        Token (Literal ",");
       );
       Token (Literal ">");
     ];
@@ -124,7 +140,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "string");
         Token (Name "unit");
       |];
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Seq [
         Token (Name "path");
         Token (Literal ":");
@@ -141,6 +160,7 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Literal ":");
         Token (Name "attribute_argument_list");
       ];
+      Token (Name "ellipsis");
     |];
   );
   "attribute_argument_list",
@@ -163,7 +183,10 @@ let children_regexps : (string * Run.exp option) list = [
   "qualified_name_segment",
   Some (
     Seq [
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_argument_list");
       );
@@ -187,7 +210,10 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Literal "::");
         ];
       );
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Seq [
           Token (Literal "::");
@@ -272,7 +298,10 @@ let children_regexps : (string * Run.exp option) list = [
       Alt [|
         Alt [|
           Token (Name "wildcard");
-          Token (Name "name");
+          Alt [|
+            Token (Name "pat_7fdeb71");
+            Token (Name "semgrep_var");
+          |];
         |];
         Token (Name "pattern_struct");
         Token (Name "pattern_enum");
@@ -284,7 +313,10 @@ let children_regexps : (string * Run.exp option) list = [
           Alt [|
             Alt [|
               Token (Name "wildcard");
-              Token (Name "name");
+              Alt [|
+                Token (Name "pat_7fdeb71");
+                Token (Name "semgrep_var");
+              |];
             |];
             Token (Name "pattern_struct");
             Token (Name "pattern_enum");
@@ -304,14 +336,23 @@ let children_regexps : (string * Run.exp option) list = [
       Token (Name "qualified_name");
       Token (Literal "{");
       Alt [|
-        Token (Name "name");
+        Alt [|
+          Token (Name "pat_7fdeb71");
+          Token (Name "semgrep_var");
+        |];
         Seq [
-          Token (Name "name");
+          Alt [|
+            Token (Name "pat_7fdeb71");
+            Token (Name "semgrep_var");
+          |];
           Token (Literal ":");
           Alt [|
             Alt [|
               Token (Name "wildcard");
-              Token (Name "name");
+              Alt [|
+                Token (Name "pat_7fdeb71");
+                Token (Name "semgrep_var");
+              |];
             |];
             Token (Name "pattern_struct");
             Token (Name "pattern_enum");
@@ -323,14 +364,23 @@ let children_regexps : (string * Run.exp option) list = [
         Seq [
           Token (Literal ",");
           Alt [|
-            Token (Name "name");
+            Alt [|
+              Token (Name "pat_7fdeb71");
+              Token (Name "semgrep_var");
+            |];
             Seq [
-              Token (Name "name");
+              Alt [|
+                Token (Name "pat_7fdeb71");
+                Token (Name "semgrep_var");
+              |];
               Token (Literal ":");
               Alt [|
                 Alt [|
                   Token (Name "wildcard");
-                  Token (Name "name");
+                  Alt [|
+                    Token (Name "pat_7fdeb71");
+                    Token (Name "semgrep_var");
+                  |];
                 |];
                 Token (Name "pattern_struct");
                 Token (Name "pattern_enum");
@@ -353,7 +403,10 @@ let children_regexps : (string * Run.exp option) list = [
       Alt [|
         Alt [|
           Token (Name "wildcard");
-          Token (Name "name");
+          Alt [|
+            Token (Name "pat_7fdeb71");
+            Token (Name "semgrep_var");
+          |];
         |];
         Token (Name "pattern_struct");
         Token (Name "pattern_enum");
@@ -365,7 +418,10 @@ let children_regexps : (string * Run.exp option) list = [
           Alt [|
             Alt [|
               Token (Name "wildcard");
-              Token (Name "name");
+              Alt [|
+                Token (Name "pat_7fdeb71");
+                Token (Name "semgrep_var");
+              |];
             |];
             Token (Name "pattern_struct");
             Token (Name "pattern_enum");
@@ -381,14 +437,52 @@ let children_regexps : (string * Run.exp option) list = [
   );
   "parameter_declaration",
   Some (
-    Seq [
-      Repeat (
+    Alt [|
+      Seq [
+        Repeat (
+          Alt [|
+            Token (Name "modifier_ref");
+            Token (Name "modifier_mut");
+          |];
+        );
         Alt [|
-          Token (Name "modifier_ref");
-          Token (Name "modifier_mut");
+          Token (Name "pat_7fdeb71");
+          Token (Name "semgrep_var");
         |];
-      );
-      Token (Name "name");
+        Token (Literal ":");
+        Alt [|
+          Token (Name "type_tuple");
+          Token (Name "unit_type");
+          Token (Name "type_identifier");
+        |];
+      ];
+      Token (Name "ellipsis");
+    |];
+  );
+  "type_impl_declaration",
+  Some (
+    Seq [
+      Token (Literal "impl");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
+      Token (Literal ":");
+      Alt [|
+        Token (Name "type_tuple");
+        Token (Name "unit_type");
+        Token (Name "type_identifier");
+      |];
+    ];
+  );
+  "type_const_declaration",
+  Some (
+    Seq [
+      Token (Literal "const");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Token (Literal ":");
       Alt [|
         Token (Name "type_tuple");
@@ -404,7 +498,10 @@ let children_regexps : (string * Run.exp option) list = [
         Repeat (
           Token (Name "attribute_list");
         );
-        Token (Name "name");
+        Alt [|
+          Token (Name "pat_7fdeb71");
+          Token (Name "semgrep_var");
+        |];
         Token (Literal ":");
         Alt [|
           Token (Name "type_tuple");
@@ -414,32 +511,6 @@ let children_regexps : (string * Run.exp option) list = [
       ];
       Token (Name "ellipsis");
     |];
-  );
-  "type_impl_declaration",
-  Some (
-    Seq [
-      Token (Literal "impl");
-      Token (Name "name");
-      Token (Literal ":");
-      Alt [|
-        Token (Name "type_tuple");
-        Token (Name "unit_type");
-        Token (Name "type_identifier");
-      |];
-    ];
-  );
-  "type_const_declaration",
-  Some (
-    Seq [
-      Token (Literal "const");
-      Token (Name "name");
-      Token (Literal ":");
-      Alt [|
-        Token (Name "type_tuple");
-        Token (Name "unit_type");
-        Token (Name "type_identifier");
-      |];
-    ];
   );
   "argument_list",
   Some (
@@ -465,7 +536,6 @@ let children_regexps : (string * Run.exp option) list = [
               Token (Name "string");
               Token (Name "unit");
             |];
-            Token (Name "semgrep_var");
             Token (Name "ellipsis");
             Token (Name "deep_ellipsis");
           |];
@@ -491,7 +561,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -503,7 +572,10 @@ let children_regexps : (string * Run.exp option) list = [
   Some (
     Seq [
       Alt [|
-        Token (Name "name");
+        Alt [|
+          Token (Name "pat_7fdeb71");
+          Token (Name "semgrep_var");
+        |];
         Token (Name "wildcard");
       |];
       Alt [|
@@ -532,7 +604,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -561,7 +632,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -588,7 +658,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -612,7 +681,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -638,7 +706,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -662,7 +729,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -692,7 +758,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -716,7 +781,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -739,7 +803,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -763,7 +826,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -786,7 +848,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -826,12 +887,13 @@ let children_regexps : (string * Run.exp option) list = [
                   Token (Name "string");
                   Token (Name "unit");
                 |];
-                Token (Name "semgrep_var");
                 Token (Name "ellipsis");
                 Token (Name "deep_ellipsis");
               |];
               Token (Literal ";");
             ];
+            Token (Name "ellipsis");
+            Token (Name "deep_ellipsis");
           |];
         ];
       );
@@ -854,7 +916,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -885,7 +946,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -897,28 +957,25 @@ let children_regexps : (string * Run.exp option) list = [
   Some (
     Seq [
       Alt [|
+        Token (Name "tuple_expression");
+        Token (Name "block");
+        Token (Name "unary_expression");
+        Token (Name "binary_expression");
+        Token (Name "if_expression");
+        Token (Name "loop_expression");
+        Token (Name "match_expression");
+        Token (Name "selector_expression");
+        Token (Name "call_expression");
+        Token (Name "qualified_name");
         Alt [|
-          Token (Name "tuple_expression");
-          Token (Name "block");
-          Token (Name "unary_expression");
-          Token (Name "binary_expression");
-          Token (Name "if_expression");
-          Token (Name "loop_expression");
-          Token (Name "match_expression");
-          Token (Name "selector_expression");
-          Token (Name "call_expression");
-          Token (Name "qualified_name");
-          Alt [|
-            Token (Name "true");
-            Token (Name "false");
-            Token (Name "number");
-            Token (Name "string");
-            Token (Name "unit");
-          |];
-          Token (Name "semgrep_var");
-          Token (Name "ellipsis");
-          Token (Name "deep_ellipsis");
+          Token (Name "true");
+          Token (Name "false");
+          Token (Name "number");
+          Token (Name "string");
+          Token (Name "unit");
         |];
+        Token (Name "ellipsis");
+        Token (Name "deep_ellipsis");
       |];
       Token (Name "argument_list");
     ];
@@ -945,7 +1002,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -973,6 +1029,8 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
+        Token (Name "ellipsis");
+        Token (Name "deep_ellipsis");
       |];
       Token (Name "block");
       Opt (
@@ -996,7 +1054,10 @@ let children_regexps : (string * Run.exp option) list = [
       Alt [|
         Alt [|
           Token (Name "wildcard");
-          Token (Name "name");
+          Alt [|
+            Token (Name "pat_7fdeb71");
+            Token (Name "semgrep_var");
+          |];
         |];
         Token (Name "pattern_struct");
         Token (Name "pattern_enum");
@@ -1031,7 +1092,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -1042,30 +1102,7 @@ let children_regexps : (string * Run.exp option) list = [
   Some (
     Seq [
       Token (Literal "loop");
-      Token (Literal "{");
-      Alt [|
-        Token (Name "tuple_expression");
-        Token (Name "block");
-        Token (Name "unary_expression");
-        Token (Name "binary_expression");
-        Token (Name "if_expression");
-        Token (Name "loop_expression");
-        Token (Name "match_expression");
-        Token (Name "selector_expression");
-        Token (Name "call_expression");
-        Token (Name "qualified_name");
-        Alt [|
-          Token (Name "true");
-          Token (Name "false");
-          Token (Name "number");
-          Token (Name "string");
-          Token (Name "unit");
-        |];
-        Token (Name "semgrep_var");
-        Token (Name "ellipsis");
-        Token (Name "deep_ellipsis");
-      |];
-      Token (Literal "}");
+      Token (Name "block");
     ];
   );
   "match_case",
@@ -1075,7 +1112,10 @@ let children_regexps : (string * Run.exp option) list = [
         Alt [|
           Alt [|
             Token (Name "wildcard");
-            Token (Name "name");
+            Alt [|
+              Token (Name "pat_7fdeb71");
+              Token (Name "semgrep_var");
+            |];
           |];
           Token (Name "pattern_struct");
           Token (Name "pattern_enum");
@@ -1108,7 +1148,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -1152,7 +1191,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -1182,7 +1220,6 @@ let children_regexps : (string * Run.exp option) list = [
             Token (Name "string");
             Token (Name "unit");
           |];
-          Token (Name "semgrep_var");
           Token (Name "ellipsis");
           Token (Name "deep_ellipsis");
         |];
@@ -1192,32 +1229,61 @@ let children_regexps : (string * Run.exp option) list = [
   );
   "selector_expression",
   Some (
-    Seq [
-      Alt [|
-        Token (Name "tuple_expression");
-        Token (Name "block");
-        Token (Name "unary_expression");
-        Token (Name "binary_expression");
-        Token (Name "if_expression");
-        Token (Name "loop_expression");
-        Token (Name "match_expression");
-        Token (Name "selector_expression");
-        Token (Name "call_expression");
-        Token (Name "qualified_name");
+    Alt [|
+      Seq [
         Alt [|
-          Token (Name "true");
-          Token (Name "false");
-          Token (Name "number");
-          Token (Name "string");
-          Token (Name "unit");
+          Token (Name "tuple_expression");
+          Token (Name "block");
+          Token (Name "unary_expression");
+          Token (Name "binary_expression");
+          Token (Name "if_expression");
+          Token (Name "loop_expression");
+          Token (Name "match_expression");
+          Token (Name "selector_expression");
+          Token (Name "call_expression");
+          Token (Name "qualified_name");
+          Alt [|
+            Token (Name "true");
+            Token (Name "false");
+            Token (Name "number");
+            Token (Name "string");
+            Token (Name "unit");
+          |];
+          Token (Name "ellipsis");
+          Token (Name "deep_ellipsis");
         |];
-        Token (Name "semgrep_var");
+        Token (Literal ".");
+        Alt [|
+          Token (Name "pat_7fdeb71");
+          Token (Name "semgrep_var");
+        |];
+      ];
+      Seq [
+        Alt [|
+          Token (Name "tuple_expression");
+          Token (Name "block");
+          Token (Name "unary_expression");
+          Token (Name "binary_expression");
+          Token (Name "if_expression");
+          Token (Name "loop_expression");
+          Token (Name "match_expression");
+          Token (Name "selector_expression");
+          Token (Name "call_expression");
+          Token (Name "qualified_name");
+          Alt [|
+            Token (Name "true");
+            Token (Name "false");
+            Token (Name "number");
+            Token (Name "string");
+            Token (Name "unit");
+          |];
+          Token (Name "ellipsis");
+          Token (Name "deep_ellipsis");
+        |];
+        Token (Literal ".");
         Token (Name "ellipsis");
-        Token (Name "deep_ellipsis");
-      |];
-      Token (Literal ".");
-      Token (Name "name");
-    ];
+      ];
+    |];
   );
   "tuple_expression",
   Some (
@@ -1241,7 +1307,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -1266,7 +1331,6 @@ let children_regexps : (string * Run.exp option) list = [
               Token (Name "string");
               Token (Name "unit");
             |];
-            Token (Name "semgrep_var");
             Token (Name "ellipsis");
             Token (Name "deep_ellipsis");
           |];
@@ -1304,7 +1368,6 @@ let children_regexps : (string * Run.exp option) list = [
           Token (Name "string");
           Token (Name "unit");
         |];
-        Token (Name "semgrep_var");
         Token (Name "ellipsis");
         Token (Name "deep_ellipsis");
       |];
@@ -1326,6 +1389,17 @@ let children_regexps : (string * Run.exp option) list = [
       Token (Literal ")");
     ];
   );
+  "type_parameter_declaration",
+  Some (
+    Alt [|
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
+      Token (Name "type_const_declaration");
+      Token (Name "type_impl_declaration");
+    |];
+  );
   "member_declaration_list",
   Some (
     Seq [
@@ -1342,13 +1416,74 @@ let children_regexps : (string * Run.exp option) list = [
       Token (Literal "}");
     ];
   );
-  "type_parameter_declaration",
+  "semgrep_expression",
   Some (
-    Alt [|
-      Token (Name "name");
-      Token (Name "type_const_declaration");
-      Token (Name "type_impl_declaration");
-    |];
+    Seq [
+      Token (Literal "__SEMGREP_EXPRESSION");
+      Alt [|
+        Token (Name "tuple_expression");
+        Token (Name "block");
+        Token (Name "unary_expression");
+        Token (Name "binary_expression");
+        Token (Name "if_expression");
+        Token (Name "loop_expression");
+        Token (Name "match_expression");
+        Token (Name "selector_expression");
+        Token (Name "call_expression");
+        Token (Name "qualified_name");
+        Alt [|
+          Token (Name "true");
+          Token (Name "false");
+          Token (Name "number");
+          Token (Name "string");
+          Token (Name "unit");
+        |];
+        Token (Name "ellipsis");
+        Token (Name "deep_ellipsis");
+      |];
+    ];
+  );
+  "const_declaration",
+  Some (
+    Seq [
+      Repeat (
+        Token (Name "attribute_list");
+      );
+      Token (Literal "const");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
+      Token (Literal ":");
+      Alt [|
+        Token (Name "type_tuple");
+        Token (Name "unit_type");
+        Token (Name "type_identifier");
+      |];
+      Token (Literal "=");
+      Alt [|
+        Token (Name "tuple_expression");
+        Token (Name "block");
+        Token (Name "unary_expression");
+        Token (Name "binary_expression");
+        Token (Name "if_expression");
+        Token (Name "loop_expression");
+        Token (Name "match_expression");
+        Token (Name "selector_expression");
+        Token (Name "call_expression");
+        Token (Name "qualified_name");
+        Alt [|
+          Token (Name "true");
+          Token (Name "false");
+          Token (Name "number");
+          Token (Name "string");
+          Token (Name "unit");
+        |];
+        Token (Name "ellipsis");
+        Token (Name "deep_ellipsis");
+      |];
+      Token (Literal ";");
+    ];
   );
   "semgrep_statement",
   Some (
@@ -1382,82 +1517,15 @@ let children_regexps : (string * Run.exp option) list = [
                 Token (Name "string");
                 Token (Name "unit");
               |];
-              Token (Name "semgrep_var");
               Token (Name "ellipsis");
               Token (Name "deep_ellipsis");
             |];
             Token (Literal ";");
           ];
+          Token (Name "ellipsis");
+          Token (Name "deep_ellipsis");
         |];
       );
-    ];
-  );
-  "const_declaration",
-  Some (
-    Seq [
-      Repeat (
-        Token (Name "attribute_list");
-      );
-      Token (Literal "const");
-      Token (Name "name");
-      Token (Literal ":");
-      Alt [|
-        Token (Name "type_tuple");
-        Token (Name "unit_type");
-        Token (Name "type_identifier");
-      |];
-      Token (Literal "=");
-      Alt [|
-        Token (Name "tuple_expression");
-        Token (Name "block");
-        Token (Name "unary_expression");
-        Token (Name "binary_expression");
-        Token (Name "if_expression");
-        Token (Name "loop_expression");
-        Token (Name "match_expression");
-        Token (Name "selector_expression");
-        Token (Name "call_expression");
-        Token (Name "qualified_name");
-        Alt [|
-          Token (Name "true");
-          Token (Name "false");
-          Token (Name "number");
-          Token (Name "string");
-          Token (Name "unit");
-        |];
-        Token (Name "semgrep_var");
-        Token (Name "ellipsis");
-        Token (Name "deep_ellipsis");
-      |];
-      Token (Literal ";");
-    ];
-  );
-  "semgrep_expression",
-  Some (
-    Seq [
-      Token (Literal "__SEMGREP_EXPRESSION");
-      Alt [|
-        Token (Name "tuple_expression");
-        Token (Name "block");
-        Token (Name "unary_expression");
-        Token (Name "binary_expression");
-        Token (Name "if_expression");
-        Token (Name "loop_expression");
-        Token (Name "match_expression");
-        Token (Name "selector_expression");
-        Token (Name "call_expression");
-        Token (Name "qualified_name");
-        Alt [|
-          Token (Name "true");
-          Token (Name "false");
-          Token (Name "number");
-          Token (Name "string");
-          Token (Name "unit");
-        |];
-        Token (Name "semgrep_var");
-        Token (Name "ellipsis");
-        Token (Name "deep_ellipsis");
-      |];
     ];
   );
   "type_parameter_list",
@@ -1484,7 +1552,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "attribute_list");
       );
       Token (Literal "enum");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1498,7 +1569,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "attribute_list");
       );
       Token (Literal "fn");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1519,7 +1593,10 @@ let children_regexps : (string * Run.exp option) list = [
   Some (
     Seq [
       Token (Literal "type");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1539,7 +1616,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "attribute_list");
       );
       Token (Literal "struct");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1554,9 +1634,7 @@ let children_regexps : (string * Run.exp option) list = [
     Seq [
       Token (Name "function_signature");
       Alt [|
-        Opt (
-          Token (Name "block");
-        );
+        Token (Name "block");
         Token (Literal ";");
       |];
     ];
@@ -1581,8 +1659,14 @@ let children_regexps : (string * Run.exp option) list = [
   "trait_declaration",
   Some (
     Seq [
+      Repeat (
+        Token (Name "attribute_list");
+      );
       Token (Literal "trait");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1596,7 +1680,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "attribute_list");
       );
       Token (Literal "impl");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1634,7 +1721,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "attribute_list");
       );
       Token (Literal "impl");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Opt (
         Token (Name "type_parameter_list");
       );
@@ -1674,7 +1764,10 @@ let children_regexps : (string * Run.exp option) list = [
         Token (Name "attribute_list");
       );
       Token (Literal "mod");
-      Token (Name "name");
+      Alt [|
+        Token (Name "pat_7fdeb71");
+        Token (Name "semgrep_var");
+      |];
       Alt [|
         Token (Literal ";");
         Token (Name "module_body");
@@ -1712,17 +1805,17 @@ let trans_integer ((kind, body) : mt) : CST.integer =
   | Leaf v -> v
   | Children _ -> assert false
 
-let trans_true_ ((kind, body) : mt) : CST.true_ =
-  match body with
-  | Leaf v -> v
-  | Children _ -> assert false
-
 let trans_modifier_ref ((kind, body) : mt) : CST.modifier_ref =
   match body with
   | Leaf v -> v
   | Children _ -> assert false
 
 let trans_binary ((kind, body) : mt) : CST.binary =
+  match body with
+  | Leaf v -> v
+  | Children _ -> assert false
+
+let trans_wildcard ((kind, body) : mt) : CST.wildcard =
   match body with
   | Leaf v -> v
   | Children _ -> assert false
@@ -1737,17 +1830,7 @@ let trans_ellipsis ((kind, body) : mt) : CST.ellipsis =
   | Leaf v -> v
   | Children _ -> assert false
 
-let trans_string_ ((kind, body) : mt) : CST.string_ =
-  match body with
-  | Leaf v -> v
-  | Children _ -> assert false
-
 let trans_modifier_mut ((kind, body) : mt) : CST.modifier_mut =
-  match body with
-  | Leaf v -> v
-  | Children _ -> assert false
-
-let trans_name ((kind, body) : mt) : CST.name =
   match body with
   | Leaf v -> v
   | Children _ -> assert false
@@ -1757,25 +1840,22 @@ let trans_false_ ((kind, body) : mt) : CST.false_ =
   | Leaf v -> v
   | Children _ -> assert false
 
-let trans_unit_type ((kind, body) : mt) : CST.unit_type =
+let trans_true_ ((kind, body) : mt) : CST.true_ =
+  match body with
+  | Leaf v -> v
+  | Children _ -> assert false
+
+let trans_pat_7fdeb71 ((kind, body) : mt) : CST.pat_7fdeb71 =
   match body with
   | Leaf v -> v
   | Children _ -> assert false
 
 let trans_unit_ ((kind, body) : mt) : CST.unit_ =
   match body with
-  | Children v ->
-      (match v with
-      | Seq [v0; v1] ->
-          (
-            Run.trans_token (Run.matcher_token v0),
-            Run.trans_token (Run.matcher_token v1)
-          )
-      | _ -> assert false
-      )
-  | Leaf _ -> assert false
+  | Leaf v -> v
+  | Children _ -> assert false
 
-let trans_wildcard ((kind, body) : mt) : CST.wildcard =
+let trans_unit_type ((kind, body) : mt) : CST.unit_type =
   match body with
   | Leaf v -> v
   | Children _ -> assert false
@@ -1791,10 +1871,16 @@ let trans_semgrep_var ((kind, body) : mt) : CST.semgrep_var =
   | Leaf v -> v
   | Children _ -> assert false
 
+let trans_string_ ((kind, body) : mt) : CST.string_ =
+  match body with
+  | Leaf v -> v
+  | Children _ -> assert false
+
 let trans_octal ((kind, body) : mt) : CST.octal =
   match body with
   | Leaf v -> v
   | Children _ -> assert false
+
 
 
 let trans_path ((kind, body) : mt) : CST.path =
@@ -1803,14 +1889,35 @@ let trans_path ((kind, body) : mt) : CST.path =
       (match v with
       | Seq [v0; v1; v2] ->
           (
-            trans_name (Run.matcher_token v0),
+            (match v0 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.repeat
               (fun v ->
                 (match v with
                 | Seq [v0; v1] ->
                     (
                       Run.trans_token (Run.matcher_token v0),
-                      trans_name (Run.matcher_token v1)
+                      (match v1 with
+                      | Alt (0, v) ->
+                          `Pat_7fdeb71 (
+                            trans_pat_7fdeb71 (Run.matcher_token v)
+                          )
+                      | Alt (1, v) ->
+                          `Semg_var (
+                            trans_semgrep_var (Run.matcher_token v)
+                          )
+                      | _ -> assert false
+                      )
                     )
                 | _ -> assert false
                 )
@@ -1874,7 +1981,17 @@ let trans_import_declaration ((kind, body) : mt) : CST.import_declaration =
                 | Seq [v0; v1] ->
                     (
                       Run.trans_token (Run.matcher_token v0),
-                      trans_name (Run.matcher_token v1)
+                      (match v1 with
+                      | Alt (0, v) ->
+                          `Pat_7fdeb71 (
+                            trans_pat_7fdeb71 (Run.matcher_token v)
+                          )
+                      | Alt (1, v) ->
+                          `Semg_var (
+                            trans_semgrep_var (Run.matcher_token v)
+                          )
+                      | _ -> assert false
+                      )
                     )
                 | _ -> assert false
                 )
@@ -1887,47 +2004,82 @@ let trans_import_declaration ((kind, body) : mt) : CST.import_declaration =
       )
   | Leaf _ -> assert false
 
+
 let trans_type_argument_list ((kind, body) : mt) : CST.type_argument_list =
   match body with
   | Children v ->
       (match v with
-      | Seq [v0; v1; v2] ->
+      | Seq [v0; v1; v2; v3; v4] ->
           (
             Run.trans_token (Run.matcher_token v0),
+            (match v1 with
+            | Alt (0, v) ->
+                `True (
+                  trans_true_ (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `False (
+                  trans_false_ (Run.matcher_token v)
+                )
+            | Alt (2, v) ->
+                `Num (
+                  trans_number (Run.matcher_token v)
+                )
+            | Alt (3, v) ->
+                `Str (
+                  trans_string_ (Run.matcher_token v)
+                )
+            | Alt (4, v) ->
+                `Unit (
+                  trans_unit_ (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.repeat
               (fun v ->
                 (match v with
-                | Alt (0, v) ->
-                    `True (
-                      trans_true_ (Run.matcher_token v)
-                    )
-                | Alt (1, v) ->
-                    `False (
-                      trans_false_ (Run.matcher_token v)
-                    )
-                | Alt (2, v) ->
-                    `Num (
-                      trans_number (Run.matcher_token v)
-                    )
-                | Alt (3, v) ->
-                    `Str (
-                      trans_string_ (Run.matcher_token v)
-                    )
-                | Alt (4, v) ->
-                    `Unit (
-                      trans_unit_ (Run.matcher_token v)
+                | Seq [v0; v1] ->
+                    (
+                      Run.trans_token (Run.matcher_token v0),
+                      (match v1 with
+                      | Alt (0, v) ->
+                          `True (
+                            trans_true_ (Run.matcher_token v)
+                          )
+                      | Alt (1, v) ->
+                          `False (
+                            trans_false_ (Run.matcher_token v)
+                          )
+                      | Alt (2, v) ->
+                          `Num (
+                            trans_number (Run.matcher_token v)
+                          )
+                      | Alt (3, v) ->
+                          `Str (
+                            trans_string_ (Run.matcher_token v)
+                          )
+                      | Alt (4, v) ->
+                          `Unit (
+                            trans_unit_ (Run.matcher_token v)
+                          )
+                      | _ -> assert false
+                      )
                     )
                 | _ -> assert false
                 )
               )
-              v1
+              v2
             ,
-            Run.trans_token (Run.matcher_token v2)
+            Run.opt
+              (fun v -> Run.trans_token (Run.matcher_token v))
+              v3
+            ,
+            Run.trans_token (Run.matcher_token v4)
           )
       | _ -> assert false
       )
   | Leaf _ -> assert false
-
 
 let rec trans_attribute_argument ((kind, body) : mt) : CST.attribute_argument =
   match body with
@@ -1960,8 +2112,18 @@ let rec trans_attribute_argument ((kind, body) : mt) : CST.attribute_argument =
             )
           )
       | Alt (1, v) ->
-          `Name (
-            trans_name (Run.matcher_token v)
+          `Choice_pat_7fdeb71 (
+            (match v with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
           )
       | Alt (2, v) ->
           `Path_COLON_choice_true (
@@ -2009,6 +2171,10 @@ let rec trans_attribute_argument ((kind, body) : mt) : CST.attribute_argument =
             | _ -> assert false
             )
           )
+      | Alt (4, v) ->
+          `Ellips (
+            trans_ellipsis (Run.matcher_token v)
+          )
       | _ -> assert false
       )
   | Leaf _ -> assert false
@@ -2050,7 +2216,18 @@ let trans_qualified_name_segment ((kind, body) : mt) : CST.qualified_name_segmen
       (match v with
       | Seq [v0; v1] ->
           (
-            trans_name (Run.matcher_token v0),
+            (match v0 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_argument_list (Run.matcher_token v))
               v1
@@ -2095,7 +2272,18 @@ let trans_qualified_name ((kind, body) : mt) : CST.qualified_name =
               )
               v0
             ,
-            trans_name (Run.matcher_token v1),
+            (match v1 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v ->
                 (match v with
@@ -2285,8 +2473,18 @@ let rec trans_pattern_enum ((kind, body) : mt) : CST.pattern_enum =
                         trans_wildcard (Run.matcher_token v)
                       )
                   | Alt (1, v) ->
-                      `Name (
-                        trans_name (Run.matcher_token v)
+                      `Choice_pat_7fdeb71 (
+                        (match v with
+                        | Alt (0, v) ->
+                            `Pat_7fdeb71 (
+                              trans_pat_7fdeb71 (Run.matcher_token v)
+                            )
+                        | Alt (1, v) ->
+                            `Semg_var (
+                              trans_semgrep_var (Run.matcher_token v)
+                            )
+                        | _ -> assert false
+                        )
                       )
                   | _ -> assert false
                   )
@@ -2321,8 +2519,18 @@ let rec trans_pattern_enum ((kind, body) : mt) : CST.pattern_enum =
                                   trans_wildcard (Run.matcher_token v)
                                 )
                             | Alt (1, v) ->
-                                `Name (
-                                  trans_name (Run.matcher_token v)
+                                `Choice_pat_7fdeb71 (
+                                  (match v with
+                                  | Alt (0, v) ->
+                                      `Pat_7fdeb71 (
+                                        trans_pat_7fdeb71 (Run.matcher_token v)
+                                      )
+                                  | Alt (1, v) ->
+                                      `Semg_var (
+                                        trans_semgrep_var (Run.matcher_token v)
+                                      )
+                                  | _ -> assert false
+                                  )
                                 )
                             | _ -> assert false
                             )
@@ -2367,15 +2575,36 @@ and trans_pattern_struct ((kind, body) : mt) : CST.pattern_struct =
             Run.trans_token (Run.matcher_token v1),
             (match v2 with
             | Alt (0, v) ->
-                `Name (
-                  trans_name (Run.matcher_token v)
+                `Choice_pat_7fdeb71 (
+                  (match v with
+                  | Alt (0, v) ->
+                      `Pat_7fdeb71 (
+                        trans_pat_7fdeb71 (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Semg_var (
+                        trans_semgrep_var (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
                 )
             | Alt (1, v) ->
-                `Name_COLON_choice_choice_wild (
+                `Choice_pat_7fdeb71_COLON_choice_choice_wild (
                   (match v with
                   | Seq [v0; v1; v2] ->
                       (
-                        trans_name (Run.matcher_token v0),
+                        (match v0 with
+                        | Alt (0, v) ->
+                            `Pat_7fdeb71 (
+                              trans_pat_7fdeb71 (Run.matcher_token v)
+                            )
+                        | Alt (1, v) ->
+                            `Semg_var (
+                              trans_semgrep_var (Run.matcher_token v)
+                            )
+                        | _ -> assert false
+                        )
+                        ,
                         Run.trans_token (Run.matcher_token v1),
                         (match v2 with
                         | Alt (0, v) ->
@@ -2386,8 +2615,18 @@ and trans_pattern_struct ((kind, body) : mt) : CST.pattern_struct =
                                     trans_wildcard (Run.matcher_token v)
                                   )
                               | Alt (1, v) ->
-                                  `Name (
-                                    trans_name (Run.matcher_token v)
+                                  `Choice_pat_7fdeb71 (
+                                    (match v with
+                                    | Alt (0, v) ->
+                                        `Pat_7fdeb71 (
+                                          trans_pat_7fdeb71 (Run.matcher_token v)
+                                        )
+                                    | Alt (1, v) ->
+                                        `Semg_var (
+                                          trans_semgrep_var (Run.matcher_token v)
+                                        )
+                                    | _ -> assert false
+                                    )
                                   )
                               | _ -> assert false
                               )
@@ -2421,15 +2660,36 @@ and trans_pattern_struct ((kind, body) : mt) : CST.pattern_struct =
                       Run.trans_token (Run.matcher_token v0),
                       (match v1 with
                       | Alt (0, v) ->
-                          `Name (
-                            trans_name (Run.matcher_token v)
+                          `Choice_pat_7fdeb71 (
+                            (match v with
+                            | Alt (0, v) ->
+                                `Pat_7fdeb71 (
+                                  trans_pat_7fdeb71 (Run.matcher_token v)
+                                )
+                            | Alt (1, v) ->
+                                `Semg_var (
+                                  trans_semgrep_var (Run.matcher_token v)
+                                )
+                            | _ -> assert false
+                            )
                           )
                       | Alt (1, v) ->
-                          `Name_COLON_choice_choice_wild (
+                          `Choice_pat_7fdeb71_COLON_choice_choice_wild (
                             (match v with
                             | Seq [v0; v1; v2] ->
                                 (
-                                  trans_name (Run.matcher_token v0),
+                                  (match v0 with
+                                  | Alt (0, v) ->
+                                      `Pat_7fdeb71 (
+                                        trans_pat_7fdeb71 (Run.matcher_token v)
+                                      )
+                                  | Alt (1, v) ->
+                                      `Semg_var (
+                                        trans_semgrep_var (Run.matcher_token v)
+                                      )
+                                  | _ -> assert false
+                                  )
+                                  ,
                                   Run.trans_token (Run.matcher_token v1),
                                   (match v2 with
                                   | Alt (0, v) ->
@@ -2440,8 +2700,18 @@ and trans_pattern_struct ((kind, body) : mt) : CST.pattern_struct =
                                               trans_wildcard (Run.matcher_token v)
                                             )
                                         | Alt (1, v) ->
-                                            `Name (
-                                              trans_name (Run.matcher_token v)
+                                            `Choice_pat_7fdeb71 (
+                                              (match v with
+                                              | Alt (0, v) ->
+                                                  `Pat_7fdeb71 (
+                                                    trans_pat_7fdeb71 (Run.matcher_token v)
+                                                  )
+                                              | Alt (1, v) ->
+                                                  `Semg_var (
+                                                    trans_semgrep_var (Run.matcher_token v)
+                                                  )
+                                              | _ -> assert false
+                                              )
                                             )
                                         | _ -> assert false
                                         )
@@ -2498,8 +2768,18 @@ and trans_pattern_tuple ((kind, body) : mt) : CST.pattern_tuple =
                         trans_wildcard (Run.matcher_token v)
                       )
                   | Alt (1, v) ->
-                      `Name (
-                        trans_name (Run.matcher_token v)
+                      `Choice_pat_7fdeb71 (
+                        (match v with
+                        | Alt (0, v) ->
+                            `Pat_7fdeb71 (
+                              trans_pat_7fdeb71 (Run.matcher_token v)
+                            )
+                        | Alt (1, v) ->
+                            `Semg_var (
+                              trans_semgrep_var (Run.matcher_token v)
+                            )
+                        | _ -> assert false
+                        )
                       )
                   | _ -> assert false
                   )
@@ -2534,8 +2814,18 @@ and trans_pattern_tuple ((kind, body) : mt) : CST.pattern_tuple =
                                   trans_wildcard (Run.matcher_token v)
                                 )
                             | Alt (1, v) ->
-                                `Name (
-                                  trans_name (Run.matcher_token v)
+                                `Choice_pat_7fdeb71 (
+                                  (match v with
+                                  | Alt (0, v) ->
+                                      `Pat_7fdeb71 (
+                                        trans_pat_7fdeb71 (Run.matcher_token v)
+                                      )
+                                  | Alt (1, v) ->
+                                      `Semg_var (
+                                        trans_semgrep_var (Run.matcher_token v)
+                                      )
+                                  | _ -> assert false
+                                  )
                                 )
                             | _ -> assert false
                             )
@@ -2570,64 +2860,44 @@ and trans_pattern_tuple ((kind, body) : mt) : CST.pattern_tuple =
       )
   | Leaf _ -> assert false
 
+
 let trans_parameter_declaration ((kind, body) : mt) : CST.parameter_declaration =
   match body with
   | Children v ->
       (match v with
-      | Seq [v0; v1; v2; v3] ->
-          (
-            Run.repeat
-              (fun v ->
-                (match v with
-                | Alt (0, v) ->
-                    `Modi_ref (
-                      trans_modifier_ref (Run.matcher_token v)
-                    )
-                | Alt (1, v) ->
-                    `Modi_mut (
-                      trans_modifier_mut (Run.matcher_token v)
-                    )
-                | _ -> assert false
-                )
-              )
-              v0
-            ,
-            trans_name (Run.matcher_token v1),
-            Run.trans_token (Run.matcher_token v2),
-            (match v3 with
-            | Alt (0, v) ->
-                `Type_tuple (
-                  trans_type_tuple (Run.matcher_token v)
-                )
-            | Alt (1, v) ->
-                `Unit_type (
-                  trans_unit_type (Run.matcher_token v)
-                )
-            | Alt (2, v) ->
-                `Type_id (
-                  trans_type_identifier (Run.matcher_token v)
-                )
-            | _ -> assert false
-            )
-          )
-      | _ -> assert false
-      )
-  | Leaf _ -> assert false
-
-let trans_member_declaration ((kind, body) : mt) : CST.member_declaration =
-  match body with
-  | Children v ->
-      (match v with
       | Alt (0, v) ->
-          `Rep_attr_list_name_COLON_choice_type_tuple (
+          `Rep_choice_modi_ref_choice_pat_7fdeb71_COLON_choice_type_tuple (
             (match v with
             | Seq [v0; v1; v2; v3] ->
                 (
                   Run.repeat
-                    (fun v -> trans_attribute_list (Run.matcher_token v))
+                    (fun v ->
+                      (match v with
+                      | Alt (0, v) ->
+                          `Modi_ref (
+                            trans_modifier_ref (Run.matcher_token v)
+                          )
+                      | Alt (1, v) ->
+                          `Modi_mut (
+                            trans_modifier_mut (Run.matcher_token v)
+                          )
+                      | _ -> assert false
+                      )
+                    )
                     v0
                   ,
-                  trans_name (Run.matcher_token v1),
+                  (match v1 with
+                  | Alt (0, v) ->
+                      `Pat_7fdeb71 (
+                        trans_pat_7fdeb71 (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Semg_var (
+                        trans_semgrep_var (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                  ,
                   Run.trans_token (Run.matcher_token v2),
                   (match v3 with
                   | Alt (0, v) ->
@@ -2656,7 +2926,6 @@ let trans_member_declaration ((kind, body) : mt) : CST.member_declaration =
       )
   | Leaf _ -> assert false
 
-
 let trans_type_impl_declaration ((kind, body) : mt) : CST.type_impl_declaration =
   match body with
   | Children v ->
@@ -2664,7 +2933,18 @@ let trans_type_impl_declaration ((kind, body) : mt) : CST.type_impl_declaration 
       | Seq [v0; v1; v2; v3] ->
           (
             Run.trans_token (Run.matcher_token v0),
-            trans_name (Run.matcher_token v1),
+            (match v1 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.trans_token (Run.matcher_token v2),
             (match v3 with
             | Alt (0, v) ->
@@ -2693,7 +2973,18 @@ let trans_type_const_declaration ((kind, body) : mt) : CST.type_const_declaratio
       | Seq [v0; v1; v2; v3] ->
           (
             Run.trans_token (Run.matcher_token v0),
-            trans_name (Run.matcher_token v1),
+            (match v1 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.trans_token (Run.matcher_token v2),
             (match v3 with
             | Alt (0, v) ->
@@ -2714,6 +3005,60 @@ let trans_type_const_declaration ((kind, body) : mt) : CST.type_const_declaratio
       | _ -> assert false
       )
   | Leaf _ -> assert false
+
+let trans_member_declaration ((kind, body) : mt) : CST.member_declaration =
+  match body with
+  | Children v ->
+      (match v with
+      | Alt (0, v) ->
+          `Rep_attr_list_choice_pat_7fdeb71_COLON_choice_type_tuple (
+            (match v with
+            | Seq [v0; v1; v2; v3] ->
+                (
+                  Run.repeat
+                    (fun v -> trans_attribute_list (Run.matcher_token v))
+                    v0
+                  ,
+                  (match v1 with
+                  | Alt (0, v) ->
+                      `Pat_7fdeb71 (
+                        trans_pat_7fdeb71 (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Semg_var (
+                        trans_semgrep_var (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                  ,
+                  Run.trans_token (Run.matcher_token v2),
+                  (match v3 with
+                  | Alt (0, v) ->
+                      `Type_tuple (
+                        trans_type_tuple (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Unit_type (
+                        trans_unit_type (Run.matcher_token v)
+                      )
+                  | Alt (2, v) ->
+                      `Type_id (
+                        trans_type_identifier (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                )
+            | _ -> assert false
+            )
+          )
+      | Alt (1, v) ->
+          `Ellips (
+            trans_ellipsis (Run.matcher_token v)
+          )
+      | _ -> assert false
+      )
+  | Leaf _ -> assert false
+
 
 
 let rec trans_argument_list ((kind, body) : mt) : CST.argument_list =
@@ -2796,14 +3141,10 @@ let rec trans_argument_list ((kind, body) : mt) : CST.argument_list =
                             )
                           )
                       | Alt (11, v) ->
-                          `Semg_var (
-                            trans_semgrep_var (Run.matcher_token v)
-                          )
-                      | Alt (12, v) ->
                           `Ellips (
                             trans_ellipsis (Run.matcher_token v)
                           )
-                      | Alt (13, v) ->
+                      | Alt (12, v) ->
                           `Deep_ellips (
                             trans_deep_ellipsis (Run.matcher_token v)
                           )
@@ -2887,14 +3228,10 @@ let rec trans_argument_list ((kind, body) : mt) : CST.argument_list =
                       )
                     )
                 | Alt (11, v) ->
-                    `Semg_var (
-                      trans_semgrep_var (Run.matcher_token v)
-                    )
-                | Alt (12, v) ->
                     `Ellips (
                       trans_ellipsis (Run.matcher_token v)
                     )
-                | Alt (13, v) ->
+                | Alt (12, v) ->
                     `Deep_ellips (
                       trans_deep_ellipsis (Run.matcher_token v)
                     )
@@ -2917,8 +3254,18 @@ and trans_assignment_statement ((kind, body) : mt) : CST.assignment_statement =
           (
             (match v0 with
             | Alt (0, v) ->
-                `Name (
-                  trans_name (Run.matcher_token v)
+                `Choice_pat_7fdeb71 (
+                  (match v with
+                  | Alt (0, v) ->
+                      `Pat_7fdeb71 (
+                        trans_pat_7fdeb71 (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Semg_var (
+                        trans_semgrep_var (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
                 )
             | Alt (1, v) ->
                 `Wild (
@@ -3023,14 +3370,10 @@ and trans_assignment_statement ((kind, body) : mt) : CST.assignment_statement =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -3120,14 +3463,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3218,14 +3557,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3308,14 +3643,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3402,14 +3733,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3492,14 +3819,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3602,14 +3925,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3692,14 +4011,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3775,14 +4090,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3865,14 +4176,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -3948,14 +4255,10 @@ and trans_binary_expression ((kind, body) : mt) : CST.binary_expression =
                         )
                       )
                   | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
                       `Ellips (
                         trans_ellipsis (Run.matcher_token v)
                       )
-                  | Alt (13, v) ->
+                  | Alt (12, v) ->
                       `Deep_ellips (
                         trans_deep_ellipsis (Run.matcher_token v)
                       )
@@ -4083,14 +4386,10 @@ and trans_block ((kind, body) : mt) : CST.block =
                                         )
                                       )
                                   | Alt (11, v) ->
-                                      `Semg_var (
-                                        trans_semgrep_var (Run.matcher_token v)
-                                      )
-                                  | Alt (12, v) ->
                                       `Ellips (
                                         trans_ellipsis (Run.matcher_token v)
                                       )
-                                  | Alt (13, v) ->
+                                  | Alt (12, v) ->
                                       `Deep_ellips (
                                         trans_deep_ellipsis (Run.matcher_token v)
                                       )
@@ -4101,6 +4400,14 @@ and trans_block ((kind, body) : mt) : CST.block =
                                 )
                             | _ -> assert false
                             )
+                          )
+                      | Alt (8, v) ->
+                          `Ellips (
+                            trans_ellipsis (Run.matcher_token v)
+                          )
+                      | Alt (9, v) ->
+                          `Deep_ellips (
+                            trans_deep_ellipsis (Run.matcher_token v)
                           )
                       | _ -> assert false
                       )
@@ -4180,14 +4487,10 @@ and trans_block ((kind, body) : mt) : CST.block =
                       )
                     )
                 | Alt (11, v) ->
-                    `Semg_var (
-                      trans_semgrep_var (Run.matcher_token v)
-                    )
-                | Alt (12, v) ->
                     `Ellips (
                       trans_ellipsis (Run.matcher_token v)
                     )
-                | Alt (13, v) ->
+                | Alt (12, v) ->
                     `Deep_ellips (
                       trans_deep_ellipsis (Run.matcher_token v)
                     )
@@ -4279,14 +4582,10 @@ and trans_break_statement ((kind, body) : mt) : CST.break_statement =
                       )
                     )
                 | Alt (11, v) ->
-                    `Semg_var (
-                      trans_semgrep_var (Run.matcher_token v)
-                    )
-                | Alt (12, v) ->
                     `Ellips (
                       trans_ellipsis (Run.matcher_token v)
                     )
-                | Alt (13, v) ->
+                | Alt (12, v) ->
                     `Deep_ellips (
                       trans_deep_ellipsis (Run.matcher_token v)
                     )
@@ -4309,88 +4608,78 @@ and trans_call_expression ((kind, body) : mt) : CST.call_expression =
           (
             (match v0 with
             | Alt (0, v) ->
-                `Choice_tuple_exp (
+                `Tuple_exp (
+                  trans_tuple_expression (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Blk (
+                  trans_block (Run.matcher_token v)
+                )
+            | Alt (2, v) ->
+                `Un_exp (
+                  trans_unary_expression (Run.matcher_token v)
+                )
+            | Alt (3, v) ->
+                `Bin_exp (
+                  trans_binary_expression (Run.matcher_token v)
+                )
+            | Alt (4, v) ->
+                `If_exp (
+                  trans_if_expression (Run.matcher_token v)
+                )
+            | Alt (5, v) ->
+                `Loop_exp (
+                  trans_loop_expression (Run.matcher_token v)
+                )
+            | Alt (6, v) ->
+                `Match_exp (
+                  trans_match_expression (Run.matcher_token v)
+                )
+            | Alt (7, v) ->
+                `Sele_exp (
+                  trans_selector_expression (Run.matcher_token v)
+                )
+            | Alt (8, v) ->
+                `Call_exp (
+                  trans_call_expression (Run.matcher_token v)
+                )
+            | Alt (9, v) ->
+                `Qual_name (
+                  trans_qualified_name (Run.matcher_token v)
+                )
+            | Alt (10, v) ->
+                `Choice_true (
                   (match v with
                   | Alt (0, v) ->
-                      `Tuple_exp (
-                        trans_tuple_expression (Run.matcher_token v)
+                      `True (
+                        trans_true_ (Run.matcher_token v)
                       )
                   | Alt (1, v) ->
-                      `Blk (
-                        trans_block (Run.matcher_token v)
+                      `False (
+                        trans_false_ (Run.matcher_token v)
                       )
                   | Alt (2, v) ->
-                      `Un_exp (
-                        trans_unary_expression (Run.matcher_token v)
+                      `Num (
+                        trans_number (Run.matcher_token v)
                       )
                   | Alt (3, v) ->
-                      `Bin_exp (
-                        trans_binary_expression (Run.matcher_token v)
+                      `Str (
+                        trans_string_ (Run.matcher_token v)
                       )
                   | Alt (4, v) ->
-                      `If_exp (
-                        trans_if_expression (Run.matcher_token v)
-                      )
-                  | Alt (5, v) ->
-                      `Loop_exp (
-                        trans_loop_expression (Run.matcher_token v)
-                      )
-                  | Alt (6, v) ->
-                      `Match_exp (
-                        trans_match_expression (Run.matcher_token v)
-                      )
-                  | Alt (7, v) ->
-                      `Sele_exp (
-                        trans_selector_expression (Run.matcher_token v)
-                      )
-                  | Alt (8, v) ->
-                      `Call_exp (
-                        trans_call_expression (Run.matcher_token v)
-                      )
-                  | Alt (9, v) ->
-                      `Qual_name (
-                        trans_qualified_name (Run.matcher_token v)
-                      )
-                  | Alt (10, v) ->
-                      `Choice_true (
-                        (match v with
-                        | Alt (0, v) ->
-                            `True (
-                              trans_true_ (Run.matcher_token v)
-                            )
-                        | Alt (1, v) ->
-                            `False (
-                              trans_false_ (Run.matcher_token v)
-                            )
-                        | Alt (2, v) ->
-                            `Num (
-                              trans_number (Run.matcher_token v)
-                            )
-                        | Alt (3, v) ->
-                            `Str (
-                              trans_string_ (Run.matcher_token v)
-                            )
-                        | Alt (4, v) ->
-                            `Unit (
-                              trans_unit_ (Run.matcher_token v)
-                            )
-                        | _ -> assert false
-                        )
-                      )
-                  | Alt (11, v) ->
-                      `Semg_var (
-                        trans_semgrep_var (Run.matcher_token v)
-                      )
-                  | Alt (12, v) ->
-                      `Ellips (
-                        trans_ellipsis (Run.matcher_token v)
-                      )
-                  | Alt (13, v) ->
-                      `Deep_ellips (
-                        trans_deep_ellipsis (Run.matcher_token v)
+                      `Unit (
+                        trans_unit_ (Run.matcher_token v)
                       )
                   | _ -> assert false
                   )
+                )
+            | Alt (11, v) ->
+                `Ellips (
+                  trans_ellipsis (Run.matcher_token v)
+                )
+            | Alt (12, v) ->
+                `Deep_ellips (
+                  trans_deep_ellipsis (Run.matcher_token v)
                 )
             | _ -> assert false
             )
@@ -4476,14 +4765,10 @@ and trans_deep_ellipsis ((kind, body) : mt) : CST.deep_ellipsis =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -4566,6 +4851,14 @@ and trans_if_expression ((kind, body) : mt) : CST.if_expression =
                   | _ -> assert false
                   )
                 )
+            | Alt (10, v) ->
+                `Ellips (
+                  trans_ellipsis (Run.matcher_token v)
+                )
+            | Alt (11, v) ->
+                `Deep_ellips (
+                  trans_deep_ellipsis (Run.matcher_token v)
+                )
             | _ -> assert false
             )
             ,
@@ -4617,8 +4910,18 @@ and trans_let_statement ((kind, body) : mt) : CST.let_statement =
                         trans_wildcard (Run.matcher_token v)
                       )
                   | Alt (1, v) ->
-                      `Name (
-                        trans_name (Run.matcher_token v)
+                      `Choice_pat_7fdeb71 (
+                        (match v with
+                        | Alt (0, v) ->
+                            `Pat_7fdeb71 (
+                              trans_pat_7fdeb71 (Run.matcher_token v)
+                            )
+                        | Alt (1, v) ->
+                            `Semg_var (
+                              trans_semgrep_var (Run.matcher_token v)
+                            )
+                        | _ -> assert false
+                        )
                       )
                   | _ -> assert false
                   )
@@ -4734,14 +5037,10 @@ and trans_let_statement ((kind, body) : mt) : CST.let_statement =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -4758,93 +5057,10 @@ and trans_loop_expression ((kind, body) : mt) : CST.loop_expression =
   match body with
   | Children v ->
       (match v with
-      | Seq [v0; v1; v2; v3] ->
+      | Seq [v0; v1] ->
           (
             Run.trans_token (Run.matcher_token v0),
-            Run.trans_token (Run.matcher_token v1),
-            (match v2 with
-            | Alt (0, v) ->
-                `Tuple_exp (
-                  trans_tuple_expression (Run.matcher_token v)
-                )
-            | Alt (1, v) ->
-                `Blk (
-                  trans_block (Run.matcher_token v)
-                )
-            | Alt (2, v) ->
-                `Un_exp (
-                  trans_unary_expression (Run.matcher_token v)
-                )
-            | Alt (3, v) ->
-                `Bin_exp (
-                  trans_binary_expression (Run.matcher_token v)
-                )
-            | Alt (4, v) ->
-                `If_exp (
-                  trans_if_expression (Run.matcher_token v)
-                )
-            | Alt (5, v) ->
-                `Loop_exp (
-                  trans_loop_expression (Run.matcher_token v)
-                )
-            | Alt (6, v) ->
-                `Match_exp (
-                  trans_match_expression (Run.matcher_token v)
-                )
-            | Alt (7, v) ->
-                `Sele_exp (
-                  trans_selector_expression (Run.matcher_token v)
-                )
-            | Alt (8, v) ->
-                `Call_exp (
-                  trans_call_expression (Run.matcher_token v)
-                )
-            | Alt (9, v) ->
-                `Qual_name (
-                  trans_qualified_name (Run.matcher_token v)
-                )
-            | Alt (10, v) ->
-                `Choice_true (
-                  (match v with
-                  | Alt (0, v) ->
-                      `True (
-                        trans_true_ (Run.matcher_token v)
-                      )
-                  | Alt (1, v) ->
-                      `False (
-                        trans_false_ (Run.matcher_token v)
-                      )
-                  | Alt (2, v) ->
-                      `Num (
-                        trans_number (Run.matcher_token v)
-                      )
-                  | Alt (3, v) ->
-                      `Str (
-                        trans_string_ (Run.matcher_token v)
-                      )
-                  | Alt (4, v) ->
-                      `Unit (
-                        trans_unit_ (Run.matcher_token v)
-                      )
-                  | _ -> assert false
-                  )
-                )
-            | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
-                `Ellips (
-                  trans_ellipsis (Run.matcher_token v)
-                )
-            | Alt (13, v) ->
-                `Deep_ellips (
-                  trans_deep_ellipsis (Run.matcher_token v)
-                )
-            | _ -> assert false
-            )
-            ,
-            Run.trans_token (Run.matcher_token v3)
+            trans_block (Run.matcher_token v1)
           )
       | _ -> assert false
       )
@@ -4868,8 +5084,18 @@ and trans_match_case ((kind, body) : mt) : CST.match_case =
                               trans_wildcard (Run.matcher_token v)
                             )
                         | Alt (1, v) ->
-                            `Name (
-                              trans_name (Run.matcher_token v)
+                            `Choice_pat_7fdeb71 (
+                              (match v with
+                              | Alt (0, v) ->
+                                  `Pat_7fdeb71 (
+                                    trans_pat_7fdeb71 (Run.matcher_token v)
+                                  )
+                              | Alt (1, v) ->
+                                  `Semg_var (
+                                    trans_semgrep_var (Run.matcher_token v)
+                                  )
+                              | _ -> assert false
+                              )
                             )
                         | _ -> assert false
                         )
@@ -4987,14 +5213,10 @@ and trans_match_case ((kind, body) : mt) : CST.match_case =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -5110,14 +5332,10 @@ and trans_match_expression ((kind, body) : mt) : CST.match_expression =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -5207,14 +5425,10 @@ and trans_return_statement ((kind, body) : mt) : CST.return_statement =
                       )
                     )
                 | Alt (11, v) ->
-                    `Semg_var (
-                      trans_semgrep_var (Run.matcher_token v)
-                    )
-                | Alt (12, v) ->
                     `Ellips (
                       trans_ellipsis (Run.matcher_token v)
                     )
-                | Alt (13, v) ->
+                | Alt (12, v) ->
                     `Deep_ellips (
                       trans_deep_ellipsis (Run.matcher_token v)
                     )
@@ -5233,92 +5447,193 @@ and trans_selector_expression ((kind, body) : mt) : CST.selector_expression =
   match body with
   | Children v ->
       (match v with
-      | Seq [v0; v1; v2] ->
-          (
-            (match v0 with
-            | Alt (0, v) ->
-                `Tuple_exp (
-                  trans_tuple_expression (Run.matcher_token v)
-                )
-            | Alt (1, v) ->
-                `Blk (
-                  trans_block (Run.matcher_token v)
-                )
-            | Alt (2, v) ->
-                `Un_exp (
-                  trans_unary_expression (Run.matcher_token v)
-                )
-            | Alt (3, v) ->
-                `Bin_exp (
-                  trans_binary_expression (Run.matcher_token v)
-                )
-            | Alt (4, v) ->
-                `If_exp (
-                  trans_if_expression (Run.matcher_token v)
-                )
-            | Alt (5, v) ->
-                `Loop_exp (
-                  trans_loop_expression (Run.matcher_token v)
-                )
-            | Alt (6, v) ->
-                `Match_exp (
-                  trans_match_expression (Run.matcher_token v)
-                )
-            | Alt (7, v) ->
-                `Sele_exp (
-                  trans_selector_expression (Run.matcher_token v)
-                )
-            | Alt (8, v) ->
-                `Call_exp (
-                  trans_call_expression (Run.matcher_token v)
-                )
-            | Alt (9, v) ->
-                `Qual_name (
-                  trans_qualified_name (Run.matcher_token v)
-                )
-            | Alt (10, v) ->
-                `Choice_true (
-                  (match v with
+      | Alt (0, v) ->
+          `Choice_tuple_exp_DOT_choice_pat_7fdeb71 (
+            (match v with
+            | Seq [v0; v1; v2] ->
+                (
+                  (match v0 with
                   | Alt (0, v) ->
-                      `True (
-                        trans_true_ (Run.matcher_token v)
+                      `Tuple_exp (
+                        trans_tuple_expression (Run.matcher_token v)
                       )
                   | Alt (1, v) ->
-                      `False (
-                        trans_false_ (Run.matcher_token v)
+                      `Blk (
+                        trans_block (Run.matcher_token v)
                       )
                   | Alt (2, v) ->
-                      `Num (
-                        trans_number (Run.matcher_token v)
+                      `Un_exp (
+                        trans_unary_expression (Run.matcher_token v)
                       )
                   | Alt (3, v) ->
-                      `Str (
-                        trans_string_ (Run.matcher_token v)
+                      `Bin_exp (
+                        trans_binary_expression (Run.matcher_token v)
                       )
                   | Alt (4, v) ->
-                      `Unit (
-                        trans_unit_ (Run.matcher_token v)
+                      `If_exp (
+                        trans_if_expression (Run.matcher_token v)
+                      )
+                  | Alt (5, v) ->
+                      `Loop_exp (
+                        trans_loop_expression (Run.matcher_token v)
+                      )
+                  | Alt (6, v) ->
+                      `Match_exp (
+                        trans_match_expression (Run.matcher_token v)
+                      )
+                  | Alt (7, v) ->
+                      `Sele_exp (
+                        trans_selector_expression (Run.matcher_token v)
+                      )
+                  | Alt (8, v) ->
+                      `Call_exp (
+                        trans_call_expression (Run.matcher_token v)
+                      )
+                  | Alt (9, v) ->
+                      `Qual_name (
+                        trans_qualified_name (Run.matcher_token v)
+                      )
+                  | Alt (10, v) ->
+                      `Choice_true (
+                        (match v with
+                        | Alt (0, v) ->
+                            `True (
+                              trans_true_ (Run.matcher_token v)
+                            )
+                        | Alt (1, v) ->
+                            `False (
+                              trans_false_ (Run.matcher_token v)
+                            )
+                        | Alt (2, v) ->
+                            `Num (
+                              trans_number (Run.matcher_token v)
+                            )
+                        | Alt (3, v) ->
+                            `Str (
+                              trans_string_ (Run.matcher_token v)
+                            )
+                        | Alt (4, v) ->
+                            `Unit (
+                              trans_unit_ (Run.matcher_token v)
+                            )
+                        | _ -> assert false
+                        )
+                      )
+                  | Alt (11, v) ->
+                      `Ellips (
+                        trans_ellipsis (Run.matcher_token v)
+                      )
+                  | Alt (12, v) ->
+                      `Deep_ellips (
+                        trans_deep_ellipsis (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                  ,
+                  Run.trans_token (Run.matcher_token v1),
+                  (match v2 with
+                  | Alt (0, v) ->
+                      `Pat_7fdeb71 (
+                        trans_pat_7fdeb71 (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Semg_var (
+                        trans_semgrep_var (Run.matcher_token v)
                       )
                   | _ -> assert false
                   )
                 )
-            | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
-                `Ellips (
-                  trans_ellipsis (Run.matcher_token v)
-                )
-            | Alt (13, v) ->
-                `Deep_ellips (
-                  trans_deep_ellipsis (Run.matcher_token v)
+            | _ -> assert false
+            )
+          )
+      | Alt (1, v) ->
+          `Choice_tuple_exp_DOT_ellips (
+            (match v with
+            | Seq [v0; v1; v2] ->
+                (
+                  (match v0 with
+                  | Alt (0, v) ->
+                      `Tuple_exp (
+                        trans_tuple_expression (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `Blk (
+                        trans_block (Run.matcher_token v)
+                      )
+                  | Alt (2, v) ->
+                      `Un_exp (
+                        trans_unary_expression (Run.matcher_token v)
+                      )
+                  | Alt (3, v) ->
+                      `Bin_exp (
+                        trans_binary_expression (Run.matcher_token v)
+                      )
+                  | Alt (4, v) ->
+                      `If_exp (
+                        trans_if_expression (Run.matcher_token v)
+                      )
+                  | Alt (5, v) ->
+                      `Loop_exp (
+                        trans_loop_expression (Run.matcher_token v)
+                      )
+                  | Alt (6, v) ->
+                      `Match_exp (
+                        trans_match_expression (Run.matcher_token v)
+                      )
+                  | Alt (7, v) ->
+                      `Sele_exp (
+                        trans_selector_expression (Run.matcher_token v)
+                      )
+                  | Alt (8, v) ->
+                      `Call_exp (
+                        trans_call_expression (Run.matcher_token v)
+                      )
+                  | Alt (9, v) ->
+                      `Qual_name (
+                        trans_qualified_name (Run.matcher_token v)
+                      )
+                  | Alt (10, v) ->
+                      `Choice_true (
+                        (match v with
+                        | Alt (0, v) ->
+                            `True (
+                              trans_true_ (Run.matcher_token v)
+                            )
+                        | Alt (1, v) ->
+                            `False (
+                              trans_false_ (Run.matcher_token v)
+                            )
+                        | Alt (2, v) ->
+                            `Num (
+                              trans_number (Run.matcher_token v)
+                            )
+                        | Alt (3, v) ->
+                            `Str (
+                              trans_string_ (Run.matcher_token v)
+                            )
+                        | Alt (4, v) ->
+                            `Unit (
+                              trans_unit_ (Run.matcher_token v)
+                            )
+                        | _ -> assert false
+                        )
+                      )
+                  | Alt (11, v) ->
+                      `Ellips (
+                        trans_ellipsis (Run.matcher_token v)
+                      )
+                  | Alt (12, v) ->
+                      `Deep_ellips (
+                        trans_deep_ellipsis (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                  ,
+                  Run.trans_token (Run.matcher_token v1),
+                  trans_ellipsis (Run.matcher_token v2)
                 )
             | _ -> assert false
             )
-            ,
-            Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2)
           )
       | _ -> assert false
       )
@@ -5399,14 +5714,10 @@ and trans_tuple_expression ((kind, body) : mt) : CST.tuple_expression =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -5487,14 +5798,10 @@ and trans_tuple_expression ((kind, body) : mt) : CST.tuple_expression =
                             )
                           )
                       | Alt (11, v) ->
-                          `Semg_var (
-                            trans_semgrep_var (Run.matcher_token v)
-                          )
-                      | Alt (12, v) ->
                           `Ellips (
                             trans_ellipsis (Run.matcher_token v)
                           )
-                      | Alt (13, v) ->
+                      | Alt (12, v) ->
                           `Deep_ellips (
                             trans_deep_ellipsis (Run.matcher_token v)
                           )
@@ -5606,14 +5913,10 @@ and trans_unary_expression ((kind, body) : mt) : CST.unary_expression =
                   )
                 )
             | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
                 `Ellips (
                   trans_ellipsis (Run.matcher_token v)
                 )
-            | Alt (13, v) ->
+            | Alt (12, v) ->
                 `Deep_ellips (
                   trans_deep_ellipsis (Run.matcher_token v)
                 )
@@ -5623,7 +5926,6 @@ and trans_unary_expression ((kind, body) : mt) : CST.unary_expression =
       | _ -> assert false
       )
   | Leaf _ -> assert false
-
 
 
 let trans_parameter_list ((kind, body) : mt) : CST.parameter_list =
@@ -5651,6 +5953,36 @@ let trans_parameter_list ((kind, body) : mt) : CST.parameter_list =
               v2
             ,
             Run.trans_token (Run.matcher_token v3)
+          )
+      | _ -> assert false
+      )
+  | Leaf _ -> assert false
+
+let trans_type_parameter_declaration ((kind, body) : mt) : CST.type_parameter_declaration =
+  match body with
+  | Children v ->
+      (match v with
+      | Alt (0, v) ->
+          `Choice_pat_7fdeb71 (
+            (match v with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+          )
+      | Alt (1, v) ->
+          `Type_const_decl (
+            trans_type_const_declaration (Run.matcher_token v)
+          )
+      | Alt (2, v) ->
+          `Type_impl_decl (
+            trans_type_impl_declaration (Run.matcher_token v)
           )
       | _ -> assert false
       )
@@ -5686,21 +6018,216 @@ let trans_member_declaration_list ((kind, body) : mt) : CST.member_declaration_l
       )
   | Leaf _ -> assert false
 
-let trans_type_parameter_declaration ((kind, body) : mt) : CST.type_parameter_declaration =
+
+let trans_semgrep_expression ((kind, body) : mt) : CST.semgrep_expression =
   match body with
   | Children v ->
       (match v with
-      | Alt (0, v) ->
-          `Name (
-            trans_name (Run.matcher_token v)
+      | Seq [v0; v1] ->
+          (
+            Run.trans_token (Run.matcher_token v0),
+            (match v1 with
+            | Alt (0, v) ->
+                `Tuple_exp (
+                  trans_tuple_expression (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Blk (
+                  trans_block (Run.matcher_token v)
+                )
+            | Alt (2, v) ->
+                `Un_exp (
+                  trans_unary_expression (Run.matcher_token v)
+                )
+            | Alt (3, v) ->
+                `Bin_exp (
+                  trans_binary_expression (Run.matcher_token v)
+                )
+            | Alt (4, v) ->
+                `If_exp (
+                  trans_if_expression (Run.matcher_token v)
+                )
+            | Alt (5, v) ->
+                `Loop_exp (
+                  trans_loop_expression (Run.matcher_token v)
+                )
+            | Alt (6, v) ->
+                `Match_exp (
+                  trans_match_expression (Run.matcher_token v)
+                )
+            | Alt (7, v) ->
+                `Sele_exp (
+                  trans_selector_expression (Run.matcher_token v)
+                )
+            | Alt (8, v) ->
+                `Call_exp (
+                  trans_call_expression (Run.matcher_token v)
+                )
+            | Alt (9, v) ->
+                `Qual_name (
+                  trans_qualified_name (Run.matcher_token v)
+                )
+            | Alt (10, v) ->
+                `Choice_true (
+                  (match v with
+                  | Alt (0, v) ->
+                      `True (
+                        trans_true_ (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `False (
+                        trans_false_ (Run.matcher_token v)
+                      )
+                  | Alt (2, v) ->
+                      `Num (
+                        trans_number (Run.matcher_token v)
+                      )
+                  | Alt (3, v) ->
+                      `Str (
+                        trans_string_ (Run.matcher_token v)
+                      )
+                  | Alt (4, v) ->
+                      `Unit (
+                        trans_unit_ (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                )
+            | Alt (11, v) ->
+                `Ellips (
+                  trans_ellipsis (Run.matcher_token v)
+                )
+            | Alt (12, v) ->
+                `Deep_ellips (
+                  trans_deep_ellipsis (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
           )
-      | Alt (1, v) ->
-          `Type_const_decl (
-            trans_type_const_declaration (Run.matcher_token v)
-          )
-      | Alt (2, v) ->
-          `Type_impl_decl (
-            trans_type_impl_declaration (Run.matcher_token v)
+      | _ -> assert false
+      )
+  | Leaf _ -> assert false
+
+let trans_const_declaration ((kind, body) : mt) : CST.const_declaration =
+  match body with
+  | Children v ->
+      (match v with
+      | Seq [v0; v1; v2; v3; v4; v5; v6; v7] ->
+          (
+            Run.repeat
+              (fun v -> trans_attribute_list (Run.matcher_token v))
+              v0
+            ,
+            Run.trans_token (Run.matcher_token v1),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
+            Run.trans_token (Run.matcher_token v3),
+            (match v4 with
+            | Alt (0, v) ->
+                `Type_tuple (
+                  trans_type_tuple (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Unit_type (
+                  trans_unit_type (Run.matcher_token v)
+                )
+            | Alt (2, v) ->
+                `Type_id (
+                  trans_type_identifier (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
+            Run.trans_token (Run.matcher_token v5),
+            (match v6 with
+            | Alt (0, v) ->
+                `Tuple_exp (
+                  trans_tuple_expression (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Blk (
+                  trans_block (Run.matcher_token v)
+                )
+            | Alt (2, v) ->
+                `Un_exp (
+                  trans_unary_expression (Run.matcher_token v)
+                )
+            | Alt (3, v) ->
+                `Bin_exp (
+                  trans_binary_expression (Run.matcher_token v)
+                )
+            | Alt (4, v) ->
+                `If_exp (
+                  trans_if_expression (Run.matcher_token v)
+                )
+            | Alt (5, v) ->
+                `Loop_exp (
+                  trans_loop_expression (Run.matcher_token v)
+                )
+            | Alt (6, v) ->
+                `Match_exp (
+                  trans_match_expression (Run.matcher_token v)
+                )
+            | Alt (7, v) ->
+                `Sele_exp (
+                  trans_selector_expression (Run.matcher_token v)
+                )
+            | Alt (8, v) ->
+                `Call_exp (
+                  trans_call_expression (Run.matcher_token v)
+                )
+            | Alt (9, v) ->
+                `Qual_name (
+                  trans_qualified_name (Run.matcher_token v)
+                )
+            | Alt (10, v) ->
+                `Choice_true (
+                  (match v with
+                  | Alt (0, v) ->
+                      `True (
+                        trans_true_ (Run.matcher_token v)
+                      )
+                  | Alt (1, v) ->
+                      `False (
+                        trans_false_ (Run.matcher_token v)
+                      )
+                  | Alt (2, v) ->
+                      `Num (
+                        trans_number (Run.matcher_token v)
+                      )
+                  | Alt (3, v) ->
+                      `Str (
+                        trans_string_ (Run.matcher_token v)
+                      )
+                  | Alt (4, v) ->
+                      `Unit (
+                        trans_unit_ (Run.matcher_token v)
+                      )
+                  | _ -> assert false
+                  )
+                )
+            | Alt (11, v) ->
+                `Ellips (
+                  trans_ellipsis (Run.matcher_token v)
+                )
+            | Alt (12, v) ->
+                `Deep_ellips (
+                  trans_deep_ellipsis (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
+            Run.trans_token (Run.matcher_token v7)
           )
       | _ -> assert false
       )
@@ -5817,14 +6344,10 @@ let trans_semgrep_statement ((kind, body) : mt) : CST.semgrep_statement =
                                   )
                                 )
                             | Alt (11, v) ->
-                                `Semg_var (
-                                  trans_semgrep_var (Run.matcher_token v)
-                                )
-                            | Alt (12, v) ->
                                 `Ellips (
                                   trans_ellipsis (Run.matcher_token v)
                                 )
-                            | Alt (13, v) ->
+                            | Alt (12, v) ->
                                 `Deep_ellips (
                                   trans_deep_ellipsis (Run.matcher_token v)
                                 )
@@ -5836,6 +6359,14 @@ let trans_semgrep_statement ((kind, body) : mt) : CST.semgrep_statement =
                       | _ -> assert false
                       )
                     )
+                | Alt (8, v) ->
+                    `Ellips (
+                      trans_ellipsis (Run.matcher_token v)
+                    )
+                | Alt (9, v) ->
+                    `Deep_ellips (
+                      trans_deep_ellipsis (Run.matcher_token v)
+                    )
                 | _ -> assert false
                 )
               )
@@ -5845,219 +6376,7 @@ let trans_semgrep_statement ((kind, body) : mt) : CST.semgrep_statement =
       )
   | Leaf _ -> assert false
 
-let trans_const_declaration ((kind, body) : mt) : CST.const_declaration =
-  match body with
-  | Children v ->
-      (match v with
-      | Seq [v0; v1; v2; v3; v4; v5; v6; v7] ->
-          (
-            Run.repeat
-              (fun v -> trans_attribute_list (Run.matcher_token v))
-              v0
-            ,
-            Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
-            Run.trans_token (Run.matcher_token v3),
-            (match v4 with
-            | Alt (0, v) ->
-                `Type_tuple (
-                  trans_type_tuple (Run.matcher_token v)
-                )
-            | Alt (1, v) ->
-                `Unit_type (
-                  trans_unit_type (Run.matcher_token v)
-                )
-            | Alt (2, v) ->
-                `Type_id (
-                  trans_type_identifier (Run.matcher_token v)
-                )
-            | _ -> assert false
-            )
-            ,
-            Run.trans_token (Run.matcher_token v5),
-            (match v6 with
-            | Alt (0, v) ->
-                `Tuple_exp (
-                  trans_tuple_expression (Run.matcher_token v)
-                )
-            | Alt (1, v) ->
-                `Blk (
-                  trans_block (Run.matcher_token v)
-                )
-            | Alt (2, v) ->
-                `Un_exp (
-                  trans_unary_expression (Run.matcher_token v)
-                )
-            | Alt (3, v) ->
-                `Bin_exp (
-                  trans_binary_expression (Run.matcher_token v)
-                )
-            | Alt (4, v) ->
-                `If_exp (
-                  trans_if_expression (Run.matcher_token v)
-                )
-            | Alt (5, v) ->
-                `Loop_exp (
-                  trans_loop_expression (Run.matcher_token v)
-                )
-            | Alt (6, v) ->
-                `Match_exp (
-                  trans_match_expression (Run.matcher_token v)
-                )
-            | Alt (7, v) ->
-                `Sele_exp (
-                  trans_selector_expression (Run.matcher_token v)
-                )
-            | Alt (8, v) ->
-                `Call_exp (
-                  trans_call_expression (Run.matcher_token v)
-                )
-            | Alt (9, v) ->
-                `Qual_name (
-                  trans_qualified_name (Run.matcher_token v)
-                )
-            | Alt (10, v) ->
-                `Choice_true (
-                  (match v with
-                  | Alt (0, v) ->
-                      `True (
-                        trans_true_ (Run.matcher_token v)
-                      )
-                  | Alt (1, v) ->
-                      `False (
-                        trans_false_ (Run.matcher_token v)
-                      )
-                  | Alt (2, v) ->
-                      `Num (
-                        trans_number (Run.matcher_token v)
-                      )
-                  | Alt (3, v) ->
-                      `Str (
-                        trans_string_ (Run.matcher_token v)
-                      )
-                  | Alt (4, v) ->
-                      `Unit (
-                        trans_unit_ (Run.matcher_token v)
-                      )
-                  | _ -> assert false
-                  )
-                )
-            | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
-                `Ellips (
-                  trans_ellipsis (Run.matcher_token v)
-                )
-            | Alt (13, v) ->
-                `Deep_ellips (
-                  trans_deep_ellipsis (Run.matcher_token v)
-                )
-            | _ -> assert false
-            )
-            ,
-            Run.trans_token (Run.matcher_token v7)
-          )
-      | _ -> assert false
-      )
-  | Leaf _ -> assert false
 
-
-
-
-let trans_semgrep_expression ((kind, body) : mt) : CST.semgrep_expression =
-  match body with
-  | Children v ->
-      (match v with
-      | Seq [v0; v1] ->
-          (
-            Run.trans_token (Run.matcher_token v0),
-            (match v1 with
-            | Alt (0, v) ->
-                `Tuple_exp (
-                  trans_tuple_expression (Run.matcher_token v)
-                )
-            | Alt (1, v) ->
-                `Blk (
-                  trans_block (Run.matcher_token v)
-                )
-            | Alt (2, v) ->
-                `Un_exp (
-                  trans_unary_expression (Run.matcher_token v)
-                )
-            | Alt (3, v) ->
-                `Bin_exp (
-                  trans_binary_expression (Run.matcher_token v)
-                )
-            | Alt (4, v) ->
-                `If_exp (
-                  trans_if_expression (Run.matcher_token v)
-                )
-            | Alt (5, v) ->
-                `Loop_exp (
-                  trans_loop_expression (Run.matcher_token v)
-                )
-            | Alt (6, v) ->
-                `Match_exp (
-                  trans_match_expression (Run.matcher_token v)
-                )
-            | Alt (7, v) ->
-                `Sele_exp (
-                  trans_selector_expression (Run.matcher_token v)
-                )
-            | Alt (8, v) ->
-                `Call_exp (
-                  trans_call_expression (Run.matcher_token v)
-                )
-            | Alt (9, v) ->
-                `Qual_name (
-                  trans_qualified_name (Run.matcher_token v)
-                )
-            | Alt (10, v) ->
-                `Choice_true (
-                  (match v with
-                  | Alt (0, v) ->
-                      `True (
-                        trans_true_ (Run.matcher_token v)
-                      )
-                  | Alt (1, v) ->
-                      `False (
-                        trans_false_ (Run.matcher_token v)
-                      )
-                  | Alt (2, v) ->
-                      `Num (
-                        trans_number (Run.matcher_token v)
-                      )
-                  | Alt (3, v) ->
-                      `Str (
-                        trans_string_ (Run.matcher_token v)
-                      )
-                  | Alt (4, v) ->
-                      `Unit (
-                        trans_unit_ (Run.matcher_token v)
-                      )
-                  | _ -> assert false
-                  )
-                )
-            | Alt (11, v) ->
-                `Semg_var (
-                  trans_semgrep_var (Run.matcher_token v)
-                )
-            | Alt (12, v) ->
-                `Ellips (
-                  trans_ellipsis (Run.matcher_token v)
-                )
-            | Alt (13, v) ->
-                `Deep_ellips (
-                  trans_deep_ellipsis (Run.matcher_token v)
-                )
-            | _ -> assert false
-            )
-          )
-      | _ -> assert false
-      )
-  | Leaf _ -> assert false
 
 let trans_type_parameter_list ((kind, body) : mt) : CST.type_parameter_list =
   match body with
@@ -6101,7 +6420,18 @@ let trans_enum_declaration ((kind, body) : mt) : CST.enum_declaration =
               v0
             ,
             Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
               v3
@@ -6123,7 +6453,18 @@ let trans_function_signature ((kind, body) : mt) : CST.function_signature =
               v0
             ,
             Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
               v3
@@ -6167,7 +6508,18 @@ let trans_typealias_declaration ((kind, body) : mt) : CST.typealias_declaration 
       | Seq [v0; v1; v2; v3; v4; v5] ->
           (
             Run.trans_token (Run.matcher_token v0),
-            trans_name (Run.matcher_token v1),
+            (match v1 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
               v2
@@ -6206,7 +6558,18 @@ let trans_struct_declaration ((kind, body) : mt) : CST.struct_declaration =
               v0
             ,
             Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
               v3
@@ -6236,10 +6599,8 @@ let trans_trait_function ((kind, body) : mt) : CST.trait_function =
             trans_function_signature (Run.matcher_token v0),
             (match v1 with
             | Alt (0, v) ->
-                `Opt_blk (
-                  Run.opt
-                    (fun v -> trans_block (Run.matcher_token v))
-                    v
+                `Blk (
+                  trans_block (Run.matcher_token v)
                 )
             | Alt (1, v) ->
                 `SEMI (
@@ -6286,15 +6647,30 @@ let trans_trait_declaration ((kind, body) : mt) : CST.trait_declaration =
   match body with
   | Children v ->
       (match v with
-      | Seq [v0; v1; v2; v3] ->
+      | Seq [v0; v1; v2; v3; v4] ->
           (
-            Run.trans_token (Run.matcher_token v0),
-            trans_name (Run.matcher_token v1),
+            Run.repeat
+              (fun v -> trans_attribute_list (Run.matcher_token v))
+              v0
+            ,
+            Run.trans_token (Run.matcher_token v1),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
-              v2
+              v3
             ,
-            trans_trait_body (Run.matcher_token v3)
+            trans_trait_body (Run.matcher_token v4)
           )
       | _ -> assert false
       )
@@ -6311,7 +6687,18 @@ let rec trans_impl_base ((kind, body) : mt) : CST.impl_base =
               v0
             ,
             Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
               v3
@@ -6404,7 +6791,18 @@ and trans_impl_trait ((kind, body) : mt) : CST.impl_trait =
               v0
             ,
             Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             Run.opt
               (fun v -> trans_type_parameter_list (Run.matcher_token v))
               v3
@@ -6499,7 +6897,18 @@ and trans_module_declaration ((kind, body) : mt) : CST.module_declaration =
               v0
             ,
             Run.trans_token (Run.matcher_token v1),
-            trans_name (Run.matcher_token v2),
+            (match v2 with
+            | Alt (0, v) ->
+                `Pat_7fdeb71 (
+                  trans_pat_7fdeb71 (Run.matcher_token v)
+                )
+            | Alt (1, v) ->
+                `Semg_var (
+                  trans_semgrep_var (Run.matcher_token v)
+                )
+            | _ -> assert false
+            )
+            ,
             (match v3 with
             | Alt (0, v) ->
                 `SEMI (
@@ -6515,7 +6924,6 @@ and trans_module_declaration ((kind, body) : mt) : CST.module_declaration =
       | _ -> assert false
       )
   | Leaf _ -> assert false
-
 
 
 let trans_source_file ((kind, body) : mt) : CST.source_file =
@@ -6593,6 +7001,7 @@ let trans_source_file ((kind, body) : mt) : CST.source_file =
       | _ -> assert false
       )
   | Leaf _ -> assert false
+
 
 let parse_input_tree input_tree =
   let orig_root_node = Tree_sitter_parsing.root input_tree in
