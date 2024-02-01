@@ -2,29 +2,25 @@ File: semgrep-grammars/src/tree-sitter-cairo/LICENSE
 Git repo name: tree-sitter-cairo
 Latest commit in repo: 7837e7b701a33884f66068ff2248b1d76a622f85
 Last change in file:
-  commit 7837e7b701a33884f66068ff2248b1d76a622f85
-  Author: Frostweeds <romain.jufer@gmail.com>
-  Date:   Mon May 8 14:23:08 2023 +0200
+  commit 3c0af3d4afa69d528cc708daccd87da54eaed289
+  Author: Romain Jufer <romain.jufer@kudelskisecurity.com>
+  Date:   Thu May 4 08:40:42 2023 +0200
   
-      Merge pull request #1 from avnu-labs/fix/grammar_minor_issues
-      
-      fix minor issues in grammar
+      update author
 ---
 File: semgrep-grammars/src/tree-sitter-cairo/grammar.js
 Git repo name: tree-sitter-cairo
 Latest commit in repo: 7837e7b701a33884f66068ff2248b1d76a622f85
 Last change in file:
-  commit 7837e7b701a33884f66068ff2248b1d76a622f85
-  Author: Frostweeds <romain.jufer@gmail.com>
-  Date:   Mon May 8 14:23:08 2023 +0200
+  commit 86904867a9122ea6f4c1e98ec85198417d0b4198
+  Author: Romain Jufer <romain.jufer@gmail.com>
+  Date:   Sun May 7 09:45:51 2023 +0200
   
-      Merge pull request #1 from avnu-labs/fix/grammar_minor_issues
-      
       fix minor issues in grammar
 ---
 File: semgrep-grammars/src/semgrep-cairo/grammar.js
 Git repo name: ocaml-tree-sitter-semgrep
-Latest commit in repo: e3d08f10f24a29134d65ab519dcc04eec261047b
+Latest commit in repo: 70933949d998337f15a2663e417864c87c8714ef
 Last change in file:
   commit 18a99e0646d4274a55c657b3889da43440ae1e19
   Author: Romain Jufer <romain.jufer@gmail.com>
