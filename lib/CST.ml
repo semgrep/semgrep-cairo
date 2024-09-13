@@ -709,6 +709,6 @@ type module_declaration (* inlined *) = (
   * [ `SEMI of Token.t (* ";" *) | `Module_body of module_body ]
 )
 
-type extra = Comment of Loc.t * comment
+type extra = [ `Comment of Loc.t * comment ]
 
 type extras = extra list
