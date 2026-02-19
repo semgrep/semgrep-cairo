@@ -23,15 +23,17 @@
   ; The -rpath option tells the linker to hardcode this search location
   ; in the binary.
   ;
-  ; Including the c_library_flags.sexp allows customizing the linker arguments
-  ; based on the platform we build on.
+  ; This works as long as libtree-sitter stays where it is, which is
+  ; fine for test executables. Production executables should instead
+  ; link statically against libree-sitter to avoid problems in locating
+  ; the library at runtime.
   ;
   (c_library_flags
     (
       -L%{env:TREESITTER_LIBDIR=/usr/local/lib}
       -lstdc++
       -ltree-sitter
-      (:include c_library_flags.sexp)
+      -Wl,-rpath,%{env:TREESITTER_LIBDIR=/usr/local/lib}
     )
   )
   (foreign_stubs
@@ -42,7 +44,3 @@
            -I .)
   )
 )
-
-(rule
- (targets c_library_flags.sexp)
- (action (run ../config/discover.exe)))
